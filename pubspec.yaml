@@ -1,0 +1,14 @@
+name: libledger
+description: An interface library for the ledger file format
+version: 0.1.0
+# homepage: https://www.example.com
+
+environment:
+  sdk: '>=2.7.0 <3.0.0'
+
+dependencies:
+  petitparser: ^3.0.0
+
+dev_dependencies:
+  pedantic: ^1.8.0
+  test: ^1.9.0
