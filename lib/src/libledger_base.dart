@@ -29,12 +29,11 @@ class Date {
 }
 
 class Transaction {
-  // final String description;
-  // final String comment;
+  final String description;
   final Date date;
   // final List<TransactionLine> lines;
 
-  Transaction(/*this.description, this.comment, */ this.date /*, this.lines*/);
+  Transaction(this.description, this.date /*, this.lines*/);
 }
 
 ParseResult parseTransactions(String text) {
@@ -62,8 +61,11 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   @override
   Parser start() => ref(transaction).star().end();
 
-  Parser transaction() => ref(date);
-  Parser<String> date() => (digit() | char('/') | char('-') | char(' ') | char('.')).plus().flatten();
+  Parser transaction() => ref(date) & char(' ') & ref(description);
+  Parser<String> description() => any('description expected').plus().flatten();
+  Parser<String> date() => (digit('date expected') &
+          (digit('date expected') | char('/') | char('-') | char('.')).plus())
+      .flatten();
 }
 
 // Parser
@@ -76,5 +78,5 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
   const LedgerParserDefinition();
 
   @override
-  Parser<Transaction> transaction() => super.date().map((value) => Transaction(Date(value)));
+  Parser<Transaction> transaction() => super.transaction().map((value) => Transaction(value[2], Date(value[0])));
 }
