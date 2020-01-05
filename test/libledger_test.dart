@@ -10,16 +10,16 @@ void main() {
   group('Parser', () {
       setUp(() {});
 
-      test('Parses empty string as no statements', () {
-          castAndCheck<ParseSuccess>(parseStatements(''), (result) {
-              expect(result.statements, isEmpty);
+      test('Parses empty string as no transactions', () {
+          castAndCheck<ParseSuccess>(parseTransactions(''), (result) {
+              expect(result.transactions, isEmpty);
           });
       });
 
       test('Incremental test for parsing', () {
-          castAndCheck<ParseSuccess>(parseStatements('2010/10/01'), (result) {
-              expect(result.statements.length, equals(1));
-              expect(result.statements.first.date.date1, equals('2010/10/01'));
+          castAndCheck<ParseSuccess>(parseTransactions('2010/10/01'), (result) {
+              expect(result.transactions.length, equals(1));
+              expect(result.transactions.first.date.date1, equals('2010/10/01'));
           });
       });
   });

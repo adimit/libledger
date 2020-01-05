@@ -10,15 +10,15 @@ class ParseError implements ParseResult {
 }
 
 class ParseSuccess implements ParseResult {
-  final List<Statement> statements;
-  ParseSuccess(this.statements);
+  final List<Transaction> transactions;
+  ParseSuccess(this.transactions);
 }
 
-class StatementLine {
+class TransactionLine {
   final String account;
   final String amount;
 
-  StatementLine(this.account, this.amount);
+  TransactionLine(this.account, this.amount);
 }
 
 class Date {
@@ -28,25 +28,25 @@ class Date {
   Date(this.date1 /*, this.date2*/);
 }
 
-class Statement {
+class Transaction {
   // final String description;
   // final String comment;
   final Date date;
-  // final List<StatementLine> lines;
+  // final List<TransactionLine> lines;
 
-  Statement(/*this.description, this.comment, */ this.date /*, this.lines*/);
+  Transaction(/*this.description, this.comment, */ this.date /*, this.lines*/);
 }
 
-ParseResult parseStatements(String text) {
+ParseResult parseTransactions(String text) {
   final parseResult = LedgerParser().parse(text);
   if (parseResult is Success) {
-    return ParseSuccess(List<Statement>.from(parseResult.value));
+    return ParseSuccess(List<Transaction>.from(parseResult.value));
   } else {
     return ParseError(parseResult.toPositionString(), parseResult.message);
   }
 }
 
-String renderStatements(List<Statement> statements) {
+String renderTransactions(List<Transaction> transactions) {
   return '';
 }
 
@@ -60,9 +60,9 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   const LedgerGrammarDefinition();
 
   @override
-  Parser start() => ref(statement).star().end();
+  Parser start() => ref(transaction).star().end();
 
-  Parser statement() => ref(date);
+  Parser transaction() => ref(date);
   Parser<String> date() => (digit() | char('/') | char('-') | char(' ') | char('.')).plus().flatten();
 }
 
@@ -76,5 +76,5 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
   const LedgerParserDefinition();
 
   @override
-  Parser<Statement> statement() => super.date().map((value) => Statement(Date(value)));
+  Parser<Transaction> transaction() => super.date().map((value) => Transaction(Date(value)));
 }
