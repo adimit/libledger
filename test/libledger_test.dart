@@ -1,30 +1,26 @@
 import 'package:libledger/libledger.dart';
 import 'package:test/test.dart';
 
+void castAndCheck<T>(dynamic x, void Function(T) f) {
+  expect(x, isA<T>());
+  f(x as T);
+}
+
 void main() {
   group('Parser', () {
-    setUp(() {});
+      setUp(() {});
 
-    test('Parses empty string as no statements', () {
-      final result = parseStatements('');
-      expect(result, equals([]));
-    });
+      test('Parses empty string as no statements', () {
+          castAndCheck<ParseSuccess>(parseStatements(''), (result) {
+              expect(result.statements, isEmpty);
+          });
+      });
 
-    test('Parses simple statement correctly', () {
-      final result = parseStatements('''
-            2020-01-01 Some Description ; Comment
-              Assets:Test Account  23 EUR
-              Expenses:Test Run
-            ''');
-          expect(result, equals([
-                Statement(
-                  'Some Description',
-                  'Comment',
-                  '2020-01-01',
-                  [ StatementLine('Assets:Test Account', '23 EUR')
-                  , StatementLine('Expenses:Test Run', '')]
-                )
-          ]));
-    });
+      test('Incremental test for parsing', () {
+          castAndCheck<ParseSuccess>(parseStatements('2010/10/01'), (result) {
+              expect(result.statements.length, equals(1));
+              expect(result.statements.first.date.date1, equals('2010/10/01'));
+          });
+      });
   });
 }
