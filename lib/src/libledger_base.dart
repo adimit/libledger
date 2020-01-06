@@ -62,8 +62,8 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   Parser start() => ref(transaction).star().end();
 
   Parser transaction() => ref(date) & char(' ') & ref(description);
-  Parser<String> description() => noneOf('\n','description expected').plus().flatten();
-  Parser<String> date() => (digit('date expected') &
+  Parser description() => noneOf('\n','description expected').plus().flatten();
+  Parser date() => (digit('date expected') &
           (digit('date expected') | char('/') | char('-') | char('.')).plus())
       .flatten();
 }
