@@ -17,7 +17,9 @@ void main() {
     });
 
     test('Incremental test for parsing', () {
-      castAndCheck<ParseSuccess>(parseTransactions('2010/10/01 description foo bar ä'),
+      castAndCheck<ParseSuccess>(parseTransactions('''2010/10/01 description foo bar ä
+          foobar
+'''),
           (result) {
         expect(result.transactions.length, equals(1));
         expect(result.transactions.first.date.date1, equals('2010/10/01'));
