@@ -83,5 +83,8 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
   const LedgerParserDefinition();
 
   @override
-  Parser<Transaction> transaction() => super.transaction().map((value) => Transaction(value[2], Date(value[0])));
+  Parser<Transaction> transaction() => super.transaction().map((value) {
+        print(value);
+        return Transaction(value[2], Date(value[0]));
+      });
 }
