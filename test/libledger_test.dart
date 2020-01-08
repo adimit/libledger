@@ -2,7 +2,7 @@ import 'package:libledger/libledger.dart';
 import 'package:test/test.dart';
 
 void castAndCheck<T>(dynamic x, void Function(T) f) {
-  expect(x, isA<T>(), reason: 'Cannot cast ${x.toString()} to ${T}');
+  expect(x, isA<T>(), reason: 'Expected ${T} but got ${x.toString()}');
   f(x as T);
 }
 
