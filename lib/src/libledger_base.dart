@@ -29,6 +29,9 @@ class Date {
   // final String date2;
 
   Date(this.date1 /*, this.date2*/);
+
+  @override
+  String toString() => 'Date "${date1}"';
 }
 
 class Transaction {
