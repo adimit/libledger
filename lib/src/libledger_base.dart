@@ -64,7 +64,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   const LedgerGrammarDefinition();
 
   @override
-  Parser start() => ref(transaction).star().end();
+  Parser start() => ref(transaction).star().trim().end();
 
   Parser transaction() =>
       ref(date) &
