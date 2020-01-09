@@ -73,9 +73,8 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       char('\n') &
       ref(transfer).star();
   Parser description() => noneOf('\n', 'description expected').plus().flatten();
-  Parser transfer() => whitespace().plus().flatten() & ref(account);
-  Parser account() => (char(' ') & char(' ')).neg().star().flatten();
-  Parser amount() => noneOf('\n').plus().flatten() | epsilon();
+  Parser transfer() => (whitespace().plus().flatten() & ref(account));
+  Parser account() => ((string('  ') | char('\n')).not() & any()).plus().flatten().trim();
   Parser date() => (digit('date expected') &
           (digit('date expected') | char('/') | char('-') | char('.')).plus())
       .flatten();
