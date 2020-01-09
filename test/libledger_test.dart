@@ -28,6 +28,10 @@ void main() {
       expect(transactions, isEmpty);
     });
 
+    parseTest('blank string as no transactions', '    \t\n\n  ', (transactions) {
+      expect(transactions, isEmpty);
+    });
+
     parseTest('transaction declaration without any transfers',
         '2020/01/09 this is a description', (transactions) {
       expect(transactions.length, equals(1));
