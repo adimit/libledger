@@ -9,9 +9,7 @@ class ParseError implements ParseResult {
   ParseError(this.positionDescription, this.message);
 
   @override
-  String toString() {
-    return 'Parse error: ${message}, position: ${positionDescription}';
-  }
+  String toString() => 'Parse error: ${message}, position: ${positionDescription}';
 }
 
 class ParseSuccess implements ParseResult {
