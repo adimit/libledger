@@ -35,7 +35,7 @@ void main() {
     parseTest('transaction declaration without any transfers',
         '2020/01/09 this is a description', (transactions) {
       expect(transactions.length, equals(1));
-      expect(transactions.first.date, equals('2020/01/09'));
+      expect(transactions.first.date, equals(Date('2020/01/09')));
       expect(transactions.first.description, equals('this is a description'));
     });
 
