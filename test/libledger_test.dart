@@ -32,24 +32,14 @@ void main() {
       expect(transactions, isEmpty);
     });
 
-    parseTest('transaction declaration without any transfers',
-        '2020/01/09 this is a description', (transactions) {
+    parseTest('transaction declaration with one line',
+'''2020/01/09 this is a description\n
+  Account:Number One:Foo  20 EUR''', (transactions) {
       expect(transactions.length, equals(1));
       expect(transactions.first.date, equals(Date('2020/01/09')));
       expect(transactions.first.description, equals('this is a description'));
     });
 
-    parseTest('transaction declaration with excess whitespace',
-        '2020/01/09           this is a description            ',
-        (transactions) {
-      expect(transactions.first.description, equals('this is a description'));
-      expect(transactions.first.date, equals('2020/01/09'));
-    });
-    parseTest(
-        'transfer with account, but without amount', '''2020/01/09 description
-        Account:Number1''');
-    parseTest('transfer with account and amount', '''2020/01/09 description
-        Account:Number1  20 EUR''');
     parseTest('transfer with account and amount more whitespace',
         '''2020/01/09 description
         Account:Number1              20 EUR''');
