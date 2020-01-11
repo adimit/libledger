@@ -9,7 +9,8 @@ class ParseError implements ParseResult {
   ParseError(this.positionDescription, this.message);
 
   @override
-  String toString() => 'Parse error: ${message}, position: ${positionDescription}';
+  String toString() =>
+      'Parse error: ${message}, position: ${positionDescription}';
 }
 
 class ParseSuccess implements ParseResult {
@@ -22,6 +23,11 @@ class TransactionLine {
   final String amount;
 
   TransactionLine(this.account, this.amount);
+
+  @override
+  String toString() {
+    return '  $account  $amount';
+  }
 }
 
 class Date {
@@ -40,6 +46,11 @@ class Transaction {
   // final List<TransactionLine> lines;
 
   Transaction(this.description, this.date /*, this.lines*/);
+
+  @override
+  String toString() {
+    return 'Transaction:\n${date.date1} $description\n';
+  }
 }
 
 ParseResult parseTransactions(String text) {
@@ -75,7 +86,8 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       ref(transfer).star();
   Parser description() => noneOf('\n', 'description expected').plus().flatten();
   Parser transfer() => (whitespace().plus().flatten() & ref(account));
-  Parser account() => ((string('  ') | char('\n')).not() & any()).plus().flatten().trim();
+  Parser account() =>
+      ((string('  ') | char('\n')).not() & any()).plus().flatten().trim();
   Parser date() => (digit('date expected') &
           (digit('date expected') | char('/') | char('-') | char('.')).plus())
       .flatten();
