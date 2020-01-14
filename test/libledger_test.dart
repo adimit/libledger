@@ -34,19 +34,19 @@ void main() {
     });
 
     parseTest('transaction declaration with one line',
-        '''2020/01/09 this is a description\n
+        '''2020/01/09 this is a description
         Account:Number One:Foo''', (transactions) {
       print(transactions);
       expect(transactions.length, equals(1));
       expect(transactions.first.date.date1, equals('2020/01/09'));
       expect(transactions.first.description, equals('this is a description'));
     });
+    parseTest('transfer with account and amount more whitespace',
+      '''2020/01/09 description
+      Account:Number1            20 EUR''');
 
     group("Tests that don't run yet", () {
-      parseTest('transfer with account and amount more whitespace',
-          '''2020/01/09 description
-            Account:Number1              20 EUR''');
-      parseTest('transfer with two accounts', '''2020/01/09 description
+        parseTest('transfer with two accounts', '''2020/01/09 description
             Account:Number1  20 EUR
             Account:Number2  -20 EUR
             ''');
