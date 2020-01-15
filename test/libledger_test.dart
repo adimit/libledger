@@ -45,7 +45,6 @@ void main() {
       '''2020/01/09 description
       Account:Number1            20 EUR''');
 
-    group("Tests that don't run yet", () {
         parseTest('transfer with two accounts', '''2020/01/09 description
             Account:Number1  20 EUR
             Account:Number2  -20 EUR
@@ -63,6 +62,7 @@ void main() {
 
 
             ''');
+    group("Tests that don't run yet", () {
     }, skip: 'TODO need to fix implementation');
   });
 }
