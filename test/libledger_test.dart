@@ -58,6 +58,7 @@ void main() {
 
             2020/01/09     description     
             Account:Number1           20 EUR        
+            Account:Number3      -20 EUR
             Account:Number2         
 
 
