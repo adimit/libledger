@@ -43,9 +43,9 @@ class Date {
 class Transaction {
   final String description;
   final Date date;
-  // final List<TransactionLine> lines;
+  final List<TransactionLine> lines;
 
-  Transaction(this.description, this.date /*, this.lines*/);
+  Transaction(this.description, this.date, this.lines);
 
   @override
   String toString() {
@@ -79,14 +79,17 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   Parser start() => ref(transaction).star().trim().end();
 
   Parser transaction() =>
-  ref(date).trim() &
+      ref(date).trim() &
       ref(description) &
       char('\n') &
-      (ref(transfer) &
-        (char('\n') & ref(transfer)).star().map((value) => value.expand((i) => i).toList())).map((value) => [value[0], ...value[1]]);
+      (ref(transfer) & (char('\n') & ref(transfer)).pick(1).star())
+          .map((value) => [value[0], ...value[1]]);
   Parser description() => noneOf('\n', 'description expected').plus().flatten();
   Parser transfer() =>
-  (whitespace().and() & ref(account).trim() & ref(amount).optional()).map((value) { return [value[1], value[2]]; });
+      (whitespace().and() & ref(account).trim() & ref(amount).optional())
+          .map((value) {
+        return [value[1], value[2]];
+      });
   Parser amount() => noneOf('\n').plus().flatten();
   Parser account() =>
       ((string('  ') | char('\n')).not() & any()).plus().flatten().trim();
@@ -106,7 +109,10 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
 
   @override
   Parser<Transaction> transaction() => super.transaction().map((value) {
-        print(value);
-        return Transaction(value[1], Date(value[0]));
+        return Transaction(value[1], Date(value[0]), value[3]
+            .map((transactionLine) =>
+                TransactionLine(transactionLine[0], transactionLine[1]))
+            .toList()
+            .cast<TransactionLine>());
       });
 }
