@@ -36,7 +36,6 @@ void main() {
     parseTest('transaction declaration with one line',
         '''2020/01/09 this is a description
         Account:Number One:Foo''', (transactions) {
-      print(transactions);
       expect(transactions.length, equals(1));
       expect(transactions.first.date.date1, equals('2020/01/09'));
       expect(transactions.first.description, equals('this is a description'));
