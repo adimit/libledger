@@ -79,8 +79,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   Parser start() => ref(transaction).star().trim().end();
 
   Parser transaction() =>
-      ref(date) &
-      char(' ') &
+  ref(date).trim() &
       ref(description) &
       char('\n') &
       (ref(transfer) &
@@ -108,6 +107,6 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
   @override
   Parser<Transaction> transaction() => super.transaction().map((value) {
         print(value);
-        return Transaction(value[2], Date(value[0]));
+        return Transaction(value[1], Date(value[0]));
       });
 }
