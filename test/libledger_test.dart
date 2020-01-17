@@ -7,7 +7,7 @@ void castAndCheck<T>(dynamic x, void Function(T) f) {
 }
 
 // When we don't need an assertion, because we just want a successful parse
-void noop(List<Transaction> transactions) {
+void noop(dynamic anyArgument) {
   expect(true, isTrue);
 }
 
@@ -20,6 +20,15 @@ void parseSuccess(String description, String subject,
   });
 }
 
+void parseFailure(String description, String subject,
+    [void Function(ParseError error) assertions = noop]) {
+  test('Does not parse $description', () {
+    castAndCheck<ParseError>(parseTransactions(subject), (result) {
+      assertions(result);
+    });
+  });
+}
+
 void main() {
   group('Parser', () {
     setUp(() {});
@@ -28,7 +37,7 @@ void main() {
       expect(transactions, isEmpty);
     });
 
-    parseSuccess('blank string as no transactions', '    \t\n\n  ',
+    parseSuccess('blank string as no transactions', '  \t\n\n ',
         (transactions) {
       expect(transactions, isEmpty);
     });
@@ -51,26 +60,27 @@ void main() {
 
     parseSuccess('transfer with two accounts', '''2020/01/09 description
             Account:Number1  20 EUR
-            Account:Number2  -20 EUR
-            ''', (transactions) {
+            Account:Number2  -20 EUR''', (transactions) {
       expect(transactions.first.lines[1].amount, equals('-20 EUR'));
     });
     parseSuccess('transfer with two accounts, and only one amount',
         '''2020/01/09 description
             Account:Number1  20 EUR
-            Account:Number2
-            ''', (transactions) {
-              expect(transactions.first.lines[1].amount, isNull);
-          });
+            Account:Number2''', (transactions) {
+      expect(transactions.first.lines[1].amount, isNull);
+    });
     parseSuccess('extraneous whitespaces around transaction', '''
 
-            2020/01/09     description     
+2020/01/09     description     
             Account:Number1           20 EUR        
             Account:Number3      -20 EUR
             Account:Number2         
 
 
             ''');
+
+    parseFailure('a transaction whose lines starts with spaces',
+        '   2020-01-17 description\n  foo');
     group("Tests that don't run yet", () {},
         skip: 'TODO need to fix implementation');
   });

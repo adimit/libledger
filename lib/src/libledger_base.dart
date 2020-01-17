@@ -76,10 +76,18 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   const LedgerGrammarDefinition();
 
   @override
-  Parser start() => ref(transaction).star().trim().end();
+  Parser start() => (emptyLine() | ref(transaction)).star().end();
+
+  Parser inlineSpace() => char(' ') | char('\t');
+
+  Parser endOfLineOrInput() => char('\n').optional();
+
+  Parser newline() => char('\n');
+
+  Parser emptyLine() => (ref(inlineSpace).plus() & ref(newline)) | ref(inlineSpace).plus().end() | ref(newline);
 
   Parser transaction() =>
-      ref(date).trim() &
+      (ref(date) & whitespace().plus()).pick(0) &
       ref(description) &
       char('\n') &
       (ref(transfer) & (char('\n') & ref(transfer)).pick(1).star())
@@ -109,10 +117,13 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
 
   @override
   Parser<Transaction> transaction() => super.transaction().map((value) {
-        return Transaction(value[1], Date(value[0]), value[3]
-            .map((transactionLine) =>
-                TransactionLine(transactionLine[0], transactionLine[1]))
-            .toList()
-            .cast<TransactionLine>());
+        return Transaction(
+            value[1],
+            Date(value[0]),
+            value[3]
+                .map((transactionLine) =>
+                    TransactionLine(transactionLine[0], transactionLine[1]))
+                .toList()
+                .cast<TransactionLine>());
       });
 }
