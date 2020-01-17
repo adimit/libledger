@@ -11,7 +11,7 @@ void noop(List<Transaction> transactions) {
   expect(true, isTrue);
 }
 
-void parseTest(String description, String subject,
+void parseSuccess(String description, String subject,
     [void Function(List<Transaction>) assertions = noop]) {
   test('Parses $description', () {
     castAndCheck<ParseSuccess>(parseTransactions(subject), (result) {
@@ -24,16 +24,16 @@ void main() {
   group('Parser', () {
     setUp(() {});
 
-    parseTest('empty string as no transactions', '', (transactions) {
+    parseSuccess('empty string as no transactions', '', (transactions) {
       expect(transactions, isEmpty);
     });
 
-    parseTest('blank string as no transactions', '    \t\n\n  ',
+    parseSuccess('blank string as no transactions', '    \t\n\n  ',
         (transactions) {
       expect(transactions, isEmpty);
     });
 
-    parseTest('transaction declaration with one line',
+    parseSuccess('transaction declaration with one line',
         '''2020/01/09 this is a description
         Account:Number One:Foo''', (transactions) {
       expect(transactions.length, equals(1));
@@ -42,27 +42,27 @@ void main() {
       expect(transactions.first.lines.first.account,
           equals('Account:Number One:Foo'));
     });
-    parseTest('transfer with account and amount more whitespace',
+    parseSuccess('transfer with account and amount more whitespace',
         '''2020/01/09 description
         Account:Number1            20 EUR''', (transactions) {
       expect(transactions.first.lines.first.amount, equals('20 EUR'));
       expect(transactions.first.lines.first.account, equals('Account:Number1'));
     });
 
-    parseTest('transfer with two accounts', '''2020/01/09 description
+    parseSuccess('transfer with two accounts', '''2020/01/09 description
             Account:Number1  20 EUR
             Account:Number2  -20 EUR
             ''', (transactions) {
       expect(transactions.first.lines[1].amount, equals('-20 EUR'));
     });
-    parseTest('transfer with two accounts, and only one amount',
+    parseSuccess('transfer with two accounts, and only one amount',
         '''2020/01/09 description
             Account:Number1  20 EUR
             Account:Number2
             ''', (transactions) {
               expect(transactions.first.lines[1].amount, isNull);
           });
-    parseTest('extraneous whitespaces around transaction', '''
+    parseSuccess('extraneous whitespaces around transaction', '''
 
             2020/01/09     description     
             Account:Number1           20 EUR        
