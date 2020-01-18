@@ -76,7 +76,10 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   const LedgerGrammarDefinition();
 
   @override
-  Parser start() => (emptyLine() | ref(transaction)).star().end();
+  // FIXME: techincally, we're breaking encapsulation, as
+  // LedgerGrammarDefinition has no idea that LedgerParserDefinition will turn
+  // things into transactions
+  Parser start() => (emptyLine() | ref(transaction)).star().map((parses) => parses.whereType<Transaction>()).end();
 
   Parser inlineSpace() => char(' ') | char('\t');
 
