@@ -18,9 +18,26 @@ class ParseSuccess implements ParseResult {
   ParseSuccess(this.transactions);
 }
 
+class Account {
+  final String name;
+
+  Account(this.name);
+
+  @override
+  String toString() => 'Account: $name';
+}
+
+class Amount {
+  final String value;
+
+  Amount(this.value);
+  @override
+  String toString() => 'Amount: $value';
+}
+
 class TransactionLine {
-  final String account;
-  final String amount;
+  final Account account;
+  final Amount amount;
 
   TransactionLine(this.account, this.amount);
 
@@ -79,7 +96,10 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   // FIXME: techincally, we're breaking encapsulation, as
   // LedgerGrammarDefinition has no idea that LedgerParserDefinition will turn
   // things into transactions
-  Parser start() => (emptyLine() | ref(transaction)).star().map((parses) => parses.whereType<Transaction>()).end();
+  Parser start() => (emptyLine() | ref(transaction))
+      .star()
+      .map((parses) => parses.whereType<Transaction>())
+      .end();
 
   Parser inlineSpace() => char(' ') | char('\t');
 
@@ -87,7 +107,10 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 
   Parser newline() => char('\n');
 
-  Parser emptyLine() => (ref(inlineSpace).plus() & ref(newline)) | ref(inlineSpace).plus().end() | ref(newline);
+  Parser emptyLine() =>
+      (ref(inlineSpace).plus() & ref(newline)) |
+      ref(inlineSpace).plus().end() |
+      ref(newline);
 
   Parser transaction() =>
       (ref(date) & whitespace().plus()).pick(0) &
@@ -125,7 +148,7 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
             Date(value[0]),
             value[3]
                 .map((transactionLine) =>
-                    TransactionLine(transactionLine[0], transactionLine[1]))
+                  TransactionLine(Account(transactionLine[0]), Amount(transactionLine[1])))
                 .toList()
                 .cast<TransactionLine>());
       });
