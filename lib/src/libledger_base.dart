@@ -37,7 +37,7 @@ class Amount {
 
 class TransactionLine {
   final Account account;
-  final Amount amount;
+  final Amount amount; //nullable
 
   TransactionLine(this.account, this.amount);
 
@@ -49,7 +49,7 @@ class TransactionLine {
 
 class Date {
   final String date1;
-  // final String date2;
+  // final String date2; //nullable
 
   Date(this.date1 /*, this.date2*/);
 
