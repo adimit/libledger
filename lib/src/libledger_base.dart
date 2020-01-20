@@ -84,7 +84,6 @@ String renderTransactions(List<Transaction> transactions) {
 }
 
 // Grammar
-
 class LedgerGrammar extends GrammarParser {
   LedgerGrammar() : super(const LedgerGrammarDefinition());
 }
@@ -147,8 +146,10 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
             value[1],
             Date(value[0]),
             value[3]
-                .map((transactionLine) =>
-                  TransactionLine(Account(transactionLine[0]), Amount(transactionLine[1])))
+                .map((transactionLine) {
+                    final amount = transactionLine[1] != null ? Amount(transactionLine[1]) : null;
+                    return TransactionLine(Account(transactionLine[0]),amount);
+                })
                 .toList()
                 .cast<TransactionLine>());
       });
