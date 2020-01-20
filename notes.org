@@ -1,0 +1,22 @@
+* Notes
+The nullability experiment doesn't work as expected yet. It didn't
+appear to be possible to compile the test suite in a way that includes
+the nullability compilation flag.
+
+* Tasks
+** TODO Parse Date
+** TODO Add travis badge
+** TODO Parse Amount
+** TODO Parse Account
+** TODO Split into different files
+** TODO Determine behaviour on null description
+** TODO Add support for account declarations
+** TODO Add balance method to transaction class
+** TODO Attempt to re-enable nullable experiment
+** TODO Consider adding position information to parse result
+The idea is that a client can navigate to the corresponding
+information in the file and excise/manipulate it easily without having
+to re-render the entire file.
+
+** TODO Add serialisation
+** TODO Publish on pub.dev
