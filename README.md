@@ -5,7 +5,7 @@ format.
 
 # License
 
-See the `LICENSE` file.
+MIT. See the `LICENSE` file.
 
 ## Usage
 
