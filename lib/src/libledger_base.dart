@@ -147,8 +147,10 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
             Date(value[0]),
             value[3]
                 .map((transactionLine) {
-                    final amount = transactionLine[1] != null ? Amount(transactionLine[1]) : null;
-                    return TransactionLine(Account(transactionLine[0]),amount);
+                  final amount = transactionLine[1] != null
+                      ? Amount(transactionLine[1])
+                      : null;
+                  return TransactionLine(Account(transactionLine[0]), amount);
                 })
                 .toList()
                 .cast<TransactionLine>());
