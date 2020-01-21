@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.com/adimit/libledger.svg?branch=master)](https://travis-ci.com/adimit/libledger)
+
+-----
+
 # Description
 
 Experimental parsing support for the [ledger](https://www.ledger-cli.org/) file
