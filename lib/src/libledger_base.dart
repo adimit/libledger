@@ -124,9 +124,12 @@ class LedgerGrammarDefinition extends GrammarDefinition {
         return [value[1], value[2]];
       });
   Parser amount() => noneOf('\n').plus().flatten();
-  Parser account() => (ref(accountSegment) & (char(':') & ref(accountSegment)).pick(1).star()).map((accountPath) => [accountPath[0], ...accountPath[1]]);
+  Parser account() =>
+      (ref(accountSegment) & (char(':') & ref(accountSegment)).pick(1).star())
+          .map((accountPath) => [accountPath[0], ...accountPath[1]]);
 
-  Parser accountSegment() => ((string('  ') | char('\n') | char(':')).not() & any()).plus().flatten();
+  Parser accountSegment() =>
+      ((string('  ') | char('\n') | char(':')).not() & any()).plus().flatten();
   Parser date() => (digit('date expected') &
           (digit('date expected') | char('/') | char('-') | char('.')).plus())
       .flatten();
@@ -151,7 +154,8 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
                   final amount = transactionLine[1] != null
                       ? Amount(transactionLine[1])
                       : null;
-                      return TransactionLine(Account(transactionLine[0].cast<String>()), amount);
+                  return TransactionLine(
+                      Account(transactionLine[0].cast<String>()), amount);
                 })
                 .toList()
                 .cast<TransactionLine>());
