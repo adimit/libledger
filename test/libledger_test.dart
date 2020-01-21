@@ -48,15 +48,15 @@ void main() {
       expect(transactions.length, equals(1));
       expect(transactions.first.date.date1, equals('2020/01/09'));
       expect(transactions.first.description, equals('this is a description'));
-      expect(transactions.first.lines.first.account.name,
-          equals('Account:Number One:Foo'));
+      expect(transactions.first.lines.first.account.path,
+          equals(['Account', 'Number One', 'Foo']));
     });
     parseSuccess('transfer with account and amount more whitespace',
         '''2020/01/09 description
         Account:Number1            20 EUR''', (transactions) {
       expect(transactions.first.lines.first.amount.value, equals('20 EUR'));
-      expect(transactions.first.lines.first.account.name,
-          equals('Account:Number1'));
+      expect(transactions.first.lines.first.account.path,
+          equals(['Account', 'Number1']));
     });
 
     parseSuccess('transfer with two accounts', '''2020/01/09 description

@@ -19,12 +19,12 @@ class ParseSuccess implements ParseResult {
 }
 
 class Account {
-  final String name;
+  final List<String> path;
 
-  Account(this.name);
+  Account(this.path);
 
   @override
-  String toString() => 'Account: $name';
+  String toString() => 'Account: ${path.toString()}';
 }
 
 class Amount {
@@ -125,7 +125,11 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       });
   Parser amount() => noneOf('\n').plus().flatten();
   Parser account() =>
-      ((string('  ') | char('\n')).not() & any()).plus().flatten().trim();
+      (ref(accountSegment) & (char(':') & ref(accountSegment)).pick(1).star())
+          .map((accountPath) => [accountPath[0], ...accountPath[1]]);
+
+  Parser accountSegment() =>
+      ((string('  ') | char('\n') | char(':')).not() & any()).plus().flatten();
   Parser date() => (digit('date expected') &
           (digit('date expected') | char('/') | char('-') | char('.')).plus())
       .flatten();
@@ -150,7 +154,8 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
                   final amount = transactionLine[1] != null
                       ? Amount(transactionLine[1])
                       : null;
-                  return TransactionLine(Account(transactionLine[0]), amount);
+                  return TransactionLine(
+                      Account(transactionLine[0].cast<String>()), amount);
                 })
                 .toList()
                 .cast<TransactionLine>());
