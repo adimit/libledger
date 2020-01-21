@@ -9,7 +9,7 @@ the nullability compilation flag.
 ** DONE Add readme
 ** DONE Add License
 ** TODO Parse Amount
-** TODO Parse Account
+** DONE Parse Account
 ** TODO Split into different files
 ** TODO Determine behaviour on null description
 ** TODO Add support for account declarations
