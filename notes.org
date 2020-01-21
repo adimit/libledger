@@ -20,6 +20,12 @@ The idea is that a client can navigate to the corresponding
 information in the file and excise/manipulate it easily without having
 to re-render the entire file.
 
+** TODO Parse account declarations
+=account Foo:Bar=
+** TODO Add balance assertions
+Should the balance assertion be part of a transaction line, or should
+the parser spit it out as a separate assertion element in the list of
+transactions/parse results?
 ** TODO Add serialisation
 ** TODO Add second date
 ** TODO Publish on pub.dev
