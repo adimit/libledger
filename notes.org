@@ -5,7 +5,9 @@ the nullability compilation flag.
 
 * Tasks
 ** TODO Parse Date
-** TODO Add travis badge
+** DONE Add travis badge
+** DONE Add readme
+** DONE Add License
 ** TODO Parse Amount
 ** TODO Parse Account
 ** TODO Split into different files
