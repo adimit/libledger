@@ -19,12 +19,12 @@ class ParseSuccess implements ParseResult {
 }
 
 class Account {
-  final String name;
+  final List<String> path;
 
-  Account(this.name);
+  Account(this.path);
 
   @override
-  String toString() => 'Account: $name';
+  String toString() => 'Account: ${path.toString()}';
 }
 
 class Amount {
