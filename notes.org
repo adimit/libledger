@@ -8,24 +8,27 @@ the nullability compilation flag.
 ** DONE Add travis badge
 ** DONE Add readme
 ** DONE Add License
+** TODO Add second date
 ** TODO Parse Amount
+into string currency and string value
 ** DONE Parse Account
 ** TODO Split into different files
 ** TODO Determine behaviour on null description
 ** TODO Add support for account declarations
-** TODO Add balance method to transaction class
-** TODO Attempt to re-enable nullable experiment
-** TODO Consider adding position information to parse result
-The idea is that a client can navigate to the corresponding
-information in the file and excise/manipulate it easily without having
-to re-render the entire file.
-
-** TODO Parse account declarations
 =account Foo:Bar=
+** TODO Attempt to re-enable nullable experiment
+** TODO Parse amount value
+Allow for different locales, etc.
+
+** TODO Find out what happens when more than one line has =null= amount
+** TODO Add balance method to transaction class
 ** TODO Add balance assertions
 Should the balance assertion be part of a transaction line, or should
 the parser spit it out as a separate assertion element in the list of
 transactions/parse results?
 ** TODO Add serialisation
-** TODO Add second date
+** TODO Consider adding position information to parse result
+The idea is that a client can navigate to the corresponding
+information in the file and excise/manipulate it easily without having
+to re-render the entire file.
 ** TODO Publish on pub.dev
