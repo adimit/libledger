@@ -49,9 +49,9 @@ class TransactionLine {
 
 class Date {
   final String date1;
-  // final String date2; //nullable
+  final String date2; //nullable
 
-  Date(this.date1 /*, this.date2*/);
+  Date(this.date1, this.date2);
 
   @override
   String toString() => 'Date "${date1}"';
@@ -133,8 +133,10 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   Parser accountSegment() =>
       ((string('  ') | char('\n') | char(':')).not() & any()).plus().flatten();
 
-  Parser date() => (digit('date expected') &
-          (digit() | char('/') | char('-') | char('.')).plus())
+      Parser date() => ref(dateString) & (char('=') & ref(dateString)).pick(1).optional();
+
+      Parser dateString() => (digit('date expected') &
+        (digit() | char('/') | char('-') | char('.')).plus())
       .flatten();
 }
 
@@ -151,7 +153,7 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
   Parser<Transaction> transaction() => super.transaction().map((parseResult) {
         return Transaction(
             parseResult[1],
-            Date(parseResult[0]),
+            Date(parseResult[0][0], parseResult[0][1]),
             parseResult[3]
                 .map((transactionLine) {
                   final amount = transactionLine[1] != null

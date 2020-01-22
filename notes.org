@@ -8,7 +8,7 @@ the nullability compilation flag.
 ** DONE Add travis badge
 ** DONE Add readme
 ** DONE Add License
-** TODO Add second date
+** DONE Add second date
 ** TODO Parse Amount
 into string currency and string value
 ** DONE Parse Account
