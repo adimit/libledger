@@ -1,7 +1,12 @@
 * Notes
+** Ledger Format
+The canonical source is on the [[https://www.ledger-cli.org/3.0/doc/ledger3.html#Journal-File-Format-for-Developers][ledger website]]. There's a [[https://devhints.io/ledger][cheat sheet]]
+for what that's worth. Plaintextaccounting.org has an [[https://plaintextaccounting.org/quickref/][overview]] as well.
+** Nullability
 The nullability experiment doesn't work as expected yet. It didn't
 appear to be possible to compile the test suite in a way that includes
 the nullability compilation flag.
+
 
 * Tasks
 ** TODO Parse Date
@@ -16,7 +21,6 @@ into string currency and string value
 ** TODO Determine behaviour on null description
 ** TODO Add support for account declarations
 =account Foo:Bar=
-** TODO Attempt to re-enable nullable experiment
 ** TODO Parse amount value
 Allow for different locales, etc.
 
@@ -27,6 +31,8 @@ Should the balance assertion be part of a transaction line, or should
 the parser spit it out as a separate assertion element in the list of
 transactions/parse results?
 ** TODO Add serialisation
+** TODO Attempt to re-enable nullable experiment
+** TODO Support comments
 ** TODO Consider adding position information to parse result
 The idea is that a client can navigate to the corresponding
 information in the file and excise/manipulate it easily without having
