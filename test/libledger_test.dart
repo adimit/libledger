@@ -46,7 +46,7 @@ void main() {
         '''2020/01/09 this is a description
         Account:Number One:Foo''', (transactions) {
       expect(transactions.length, equals(1));
-      expect(transactions.first.date.date1, equals('2020/01/09'));
+      expect(transactions.first.date.date1, equals(DateTime(2020, 1, 9)));
       expect(transactions.first.date.date2, isNull);
       expect(transactions.first.description, equals('this is a description'));
       expect(transactions.first.lines.first.account.path,
@@ -56,8 +56,8 @@ void main() {
     parseSuccess(
         'second date parsed correctly', '''2020/01/22=2020/01/23 description
       Account:foo''', (transactions) {
-      expect(transactions.first.date.date1, equals('2020/01/22'));
-      expect(transactions.first.date.date2, equals('2020/01/23'));
+      expect(transactions.first.date.date1, equals(DateTime(2020,01,22)));
+      expect(transactions.first.date.date2, equals(DateTime(2020,01,23)));
     });
 
     parseSuccess('transfer with account and amount more whitespace',
