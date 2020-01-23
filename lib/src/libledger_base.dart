@@ -48,8 +48,8 @@ class TransactionLine {
 }
 
 class Date {
-  final String date1;
-  final String date2; //nullable
+  final DateTime date1;
+  final DateTime date2; //nullable
 
   Date(this.date1, this.date2);
 
@@ -133,11 +133,20 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   Parser accountSegment() =>
       ((string('  ') | char('\n') | char(':')).not() & any()).plus().flatten();
 
-      Parser date() => ref(dateString) & (char('=') & ref(dateString)).pick(1).optional();
+  Parser date() =>
+      ref(dateString) & (char('=') & ref(dateString)).pick(1).optional();
 
-      Parser dateString() => (digit('date expected') &
-        (digit() | char('/') | char('-') | char('.')).plus())
-      .flatten();
+  Parser yearNumeric() =>
+      digit().times(4).flatten().map((string) => int.parse(string));
+  Parser monthOrDayNumeric() =>
+      digit().times(2).flatten().map((string) => int.parse(string));
+  Parser dateDelimiter() => char('/') | char('-') | char('.');
+  Parser dateString() => (ref(yearNumeric) &
+          ref(dateDelimiter) &
+          ref(monthOrDayNumeric) &
+          ref(dateDelimiter) &
+          ref(monthOrDayNumeric))
+      .map((chunks) => [chunks[0], chunks[2], chunks[4]]);
 }
 
 // Parser
@@ -150,10 +159,17 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
   const LedgerParserDefinition();
 
   @override
+  Parser<DateTime> dateString() =>
+      super.dateString().map((parse) => DateTime(parse[0], parse[1], parse[2]));
+
+  @override
+  Parser<Date> date() => super.date().map((parse) => Date(parse[0], parse[1]));
+
+  @override
   Parser<Transaction> transaction() => super.transaction().map((parseResult) {
         return Transaction(
             parseResult[1],
-            Date(parseResult[0][0], parseResult[0][1]),
+            parseResult[0],
             parseResult[3]
                 .map((transactionLine) {
                   final amount = transactionLine[1] != null

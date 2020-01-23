@@ -9,7 +9,7 @@ the nullability compilation flag.
 
 
 * Tasks
-** TODO Parse Date
+** DONE Parse Date
 ** DONE Add travis badge
 ** DONE Add readme
 ** DONE Add License
@@ -24,6 +24,8 @@ into string currency and string value
 ** TODO Parse amount value
 Allow for different locales, etc.
 
+** TODO Make year optional in parsing dates
+Just take the current year?
 ** TODO Find out what happens when more than one line has =null= amount
 ** TODO Add balance method to transaction class
 ** TODO Add balance assertions
