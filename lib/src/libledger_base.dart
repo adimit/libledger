@@ -105,8 +105,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 
   Parser transaction() =>
       (ref(date) & whitespace().plus()).pick(0) &
-      ref(description) &
-      char('\n') &
+      (ref(description) & char('\n')).pick(0) &
       ref(transfer).separatedBy(char('\n'), includeSeparators: false);
 
   Parser description() => noneOf('\n', 'description expected').plus().flatten();
@@ -152,7 +151,8 @@ class LedgerParser extends GrammarParser {
 class LedgerParserDefinition extends LedgerGrammarDefinition {
   const LedgerParserDefinition();
   @override
-  Parser start() => super.start().map((parses) => parses.whereType<Transaction>());
+  Parser start() =>
+      super.start().map((parses) => parses.whereType<Transaction>());
 
   @override
   Parser<DateTime> singleDate() =>
@@ -170,6 +170,6 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
   @override
   Parser<Transaction> transaction() => super.transaction().map((parseResult) {
         return Transaction(parseResult[1], parseResult[0],
-            parseResult[3].cast<TransactionLine>());
+            parseResult[2].cast<TransactionLine>());
       });
 }
