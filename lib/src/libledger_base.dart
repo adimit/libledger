@@ -96,8 +96,6 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 
   Parser inlineSpace() => char(' ') | char('\t');
 
-  Parser endOfLineOrInput() => char('\n').optional();
-
   Parser newline() => char('\n');
 
   Parser emptyLine() =>
