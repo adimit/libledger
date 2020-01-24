@@ -127,7 +127,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       ((string('  ') | char('\n') | char(':')).not() & any()).plus().flatten();
 
   Parser date() =>
-      ref(dateString) & (char('=') & ref(dateString)).pick(1).optional();
+      ref(singleDate) & (char('=') & ref(singleDate)).pick(1).optional();
 
   Parser yearNumeric() =>
       digit().times(4).flatten().map((string) => int.parse(string));
@@ -137,7 +137,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 
   Parser dateDelimiter() => char('/') | char('-') | char('.');
 
-  Parser dateString() => (ref(yearNumeric) &
+  Parser singleDate() => (ref(yearNumeric) &
           ref(dateDelimiter) &
           ref(monthOrDayNumeric) &
           ref(dateDelimiter) &
@@ -157,8 +157,8 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
   Parser start() => super.start().map((parses) => parses.whereType<Transaction>());
 
   @override
-  Parser<DateTime> dateString() =>
-      super.dateString().map((parse) => DateTime(parse[0], parse[1], parse[2]));
+  Parser<DateTime> singleDate() =>
+      super.singleDate().map((parse) => DateTime(parse[0], parse[1], parse[2]));
 
   @override
   Parser<Date> date() => super.date().map((parse) => Date(parse[0], parse[1]));
