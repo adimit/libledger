@@ -14,7 +14,7 @@ the nullability compilation flag.
 ** DONE Add readme
 ** DONE Add License
 ** DONE Add second date
-** TODO Refactor =LedgerParserDefinition=
+** DONE Refactor =LedgerParserDefinition=
 I should be using overrides instead of ad-hoc computations for transactionLine
 ** TODO Parse Amount
 into string currency and string value
