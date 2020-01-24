@@ -92,13 +92,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   const LedgerGrammarDefinition();
 
   @override
-  // FIXME: techincally, we're breaking encapsulation, as
-  // LedgerGrammarDefinition has no idea that LedgerParserDefinition will turn
-  // things into transactions
-  Parser start() => (emptyLine() | ref(transaction))
-      .star()
-      .map((parses) => parses.whereType<Transaction>())
-      .end();
+  Parser start() => (emptyLine() | ref(transaction)).star().end();
 
   Parser inlineSpace() => char(' ') | char('\t');
 
@@ -159,6 +153,8 @@ class LedgerParser extends GrammarParser {
 
 class LedgerParserDefinition extends LedgerGrammarDefinition {
   const LedgerParserDefinition();
+  @override
+  Parser start() => super.start().map((parses) => parses.whereType<Transaction>());
 
   @override
   Parser<DateTime> dateString() =>
