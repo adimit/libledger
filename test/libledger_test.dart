@@ -62,8 +62,8 @@ void main() {
 
     parseSuccess('transfer with account and amount more whitespace',
         '''2020/01/09 description
-        Account:Number1            20 EUR''', (transactions) {
-      expect(transactions.first.lines.first.amount.value, equals('20 EUR'));
+        Account:Number1            20    EUR''', (transactions) {
+      expect(transactions.first.lines.first.amount.value, equals('20'));
       expect(transactions.first.lines.first.account.path,
           equals(['Account', 'Number1']));
     });
@@ -71,7 +71,8 @@ void main() {
     parseSuccess('transfer with two accounts', '''2020/01/09 description
             Account:Number1  20 EUR
             Account:Number2  -20 EUR''', (transactions) {
-      expect(transactions.first.lines[1].amount.value, equals('-20 EUR'));
+      expect(transactions.first.lines[1].account.path,
+          equals(['Account', 'Number2']));
     });
     parseSuccess('transfer with two accounts, and only one amount',
         '''2020/01/09 description
@@ -91,6 +92,28 @@ void main() {
 
     parseFailure('a transaction whose lines starts with spaces',
         '   2020-01-17 description\n  foo');
+
+    parseSuccess('amount with currency in front of value',
+        '2020-01-25 description\n  foo  EUR 25.00', (transactions) {
+      expect(transactions.first.lines.first.amount.currency, equals('EUR'));
+      expect(transactions.first.lines.first.amount.value, equals('25.00'));
+    });
+    parseSuccess('amount with comma as decimal separator',
+        '2020-01-25 description\n  foo  EUR 25,00', (transactions) {
+      expect(transactions.first.lines.first.amount.value, equals('25,00'));
+    });
+    parseSuccess('amount with negative value',
+        '2020-01-25 description\n  foo  EUR -25,00', (transactions) {
+      expect(transactions.first.lines.first.amount.value, equals('-25,00'));
+    });
+
+    parseSuccess('amount parses correctly without spaces',
+        '2020-01-25 description\n  foo  -25.00€\n  \n  foo ₤35', (transactions) {
+      expect(transactions.first.lines.first.amount.value, equals('-25.00'));
+      expect(transactions.first.lines.first.amount.currency, equals('€'));
+      expect(transactions.first.lines[1].amount.value, equals('35'));
+      expect(transactions.first.lines[1].amount.currency, equals('₤'));
+    });
     group("Tests that don't run yet", () {},
         skip: 'TODO need to fix implementation');
   });
