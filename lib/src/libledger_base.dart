@@ -29,10 +29,11 @@ class Account {
 
 class Amount {
   final String value;
+  final String currency; // nullable
 
-  Amount(this.value);
+  Amount(this.value, this.currency);
   @override
-  String toString() => 'Amount: $value';
+  String toString() => 'Amount: $value $currency';
 }
 
 class TransactionLine {
@@ -164,7 +165,7 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
   @override
   Parser<TransactionLine> transfer() => super.transfer().map((result) {
         return TransactionLine(Account(result[0].cast<String>()),
-            result[1] != null ? Amount(result[1]) : null);
+            result[1] != null ? Amount(result[1], null) : null);
       });
 
   @override
