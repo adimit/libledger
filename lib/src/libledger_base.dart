@@ -117,7 +117,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 
   Parser amount() =>
       (ref(amountValue) & ref(inlineSpace).star()).pick(0) &
-      ref(amountCurrency);
+      (ref(amountCurrency) & ref(inlineSpace).star()).pick(0);
 
   Parser amountValue() => (char('-').optional() &
           digit() &
