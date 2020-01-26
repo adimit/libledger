@@ -13,7 +13,7 @@ void noop(dynamic anyArgument) {
 
 void parseSuccess(String description, String subject,
     [void Function(List<Transaction>) assertions = noop]) {
-  test('Parses $description', () {
+  test('parses $description', () {
     castAndCheck<ParseSuccess>(parseTransactions(subject), (result) {
       assertions(result.transactions);
     });
@@ -22,7 +22,7 @@ void parseSuccess(String description, String subject,
 
 void parseFailure(String description, String subject,
     [void Function(ParseError error) assertions = noop]) {
-  test('Does not parse $description', () {
+  test('does not parse $description', () {
     castAndCheck<ParseError>(parseTransactions(subject), (result) {
       assertions(result);
     });
