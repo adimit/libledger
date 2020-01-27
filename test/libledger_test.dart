@@ -22,7 +22,7 @@ void parseSuccess(String description, String subject,
 
 void parseFailure(String description, String subject,
     [void Function(ParseError error) assertions = noop]) {
-  test('does not parse $description', () {
+  test('Does not parse $description', () {
     castAndCheck<ParseError>(parseTransactions(subject), (result) {
       assertions(result);
     });
