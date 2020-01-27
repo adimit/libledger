@@ -108,7 +108,8 @@ void main() {
     });
 
     parseSuccess('amount parses correctly without spaces',
-        '2020-01-25 description\n  foo  -25.00€\n  \n  foo  ₤35', (transactions) {
+        '2020-01-25 description\n  foo  -25.00€\n  \n  foo  ₤35',
+        (transactions) {
       expect(transactions.first.lines.first.amount.value, equals('-25.00'));
       expect(transactions.first.lines.first.amount.currency, equals('€'));
       expect(transactions.first.lines[1].amount.value, equals('35'));
