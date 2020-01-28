@@ -3,4 +3,5 @@
 ///
 library libledger;
 
-export 'src/libledger_base.dart';
+export 'src/interface.dart';
+export 'src/data.dart';

@@ -16,10 +16,10 @@ the nullability compilation flag.
 ** DONE Add second date
 ** DONE Refactor =LedgerParserDefinition=
 I should be using overrides instead of ad-hoc computations for transactionLine
-** TODO Parse Amount
+** DONE Parse Amount
 into string currency and string value
 ** DONE Parse Account
-** TODO Split into different files
+** DONE Split into different files
 ** TODO Determine behaviour on null description
 ** TODO Add support for account declarations
 =account Foo:Bar=
