@@ -106,6 +106,17 @@ void main() {
         '2020-01-25 description\n  foo  EUR -25,00', (transactions) {
       expect(transactions.first.lines.first.amount.value, equals('-25,00'));
     });
+    parseSuccess(
+      'transaction without description',
+      '2020/01/29\n  Account:Foo  20 EUR',
+      (transactions) {
+        expect(transactions.first.description, isNull);
+    });
+    parseSuccess('transaction with blank description has null description',
+      '2020/01/29     \n  Account:Foo  20 EUR',
+      (transactions) {
+        expect(transactions.first.description, isNull);
+    });
 
     parseSuccess('amount parses correctly without spaces',
         '2020-01-25 description\n  foo  -25.00€\n  \n  foo  ₤35',
