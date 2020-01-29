@@ -20,7 +20,8 @@ I should be using overrides instead of ad-hoc computations for transactionLine
 into string currency and string value
 ** DONE Parse Account
 ** DONE Split into different files
-** TODO Determine behaviour on null description
+** DONE Determine behaviour on null description
+It is allowed, descriptions are nullable
 ** TODO Add support for account declarations
 =account Foo:Bar=
 ** TODO Parse amount value

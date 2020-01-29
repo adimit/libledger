@@ -57,7 +57,7 @@ class Date {
 }
 
 class Transaction {
-  final String description;
+  final String description; //nullable
   final Date date;
   final List<TransactionLine> lines;
 
