@@ -1,3 +1,4 @@
+import 'package:petitparser/debug.dart';
 import 'package:petitparser/petitparser.dart';
 
 class LedgerGrammar extends GrammarParser {
@@ -20,9 +21,11 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       ref(newline);
 
   Parser transaction() =>
-      (ref(date) & whitespace().plus()).pick(0) &
-      (ref(description) & char('\n')).pick(0) &
-      ref(transfer).separatedBy(char('\n'), includeSeparators: false);
+      ref(date) &
+      (ref(inlineSpace).plus() & ref(description)).pick(1).optional() &
+      (ref(inlineSpace).star() & char('\n') &
+              ref(transfer).separatedBy(char('\n'), includeSeparators: false))
+          .pick(2);
 
   Parser description() => noneOf('\n', 'description expected').plus().flatten();
 
