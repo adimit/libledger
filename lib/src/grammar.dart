@@ -23,7 +23,8 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   Parser transaction() =>
       ref(date) &
       (ref(inlineSpace).plus() & ref(description)).pick(1).optional() &
-      (ref(inlineSpace).star() & char('\n') &
+      (ref(inlineSpace).star() &
+              char('\n') &
               ref(transfer).separatedBy(char('\n'), includeSeparators: false))
           .pick(2);
 
