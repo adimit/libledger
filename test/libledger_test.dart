@@ -124,7 +124,5 @@ void main() {
       expect(transactions.first.lines[1].amount.value, equals('35'));
       expect(transactions.first.lines[1].amount.currency, equals('₤'));
     });
-    group("Tests that don't run yet", () {},
-        skip: 'TODO need to fix implementation');
   });
 }
