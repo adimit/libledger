@@ -66,3 +66,12 @@ class Transaction implements Statement {
   @override
   String toString() => 'Transaction:\n${date.date1} $description\n';
 }
+
+class AccountDeclaration implements Statement {
+  final Account account;
+
+  AccountDeclaration(this.account);
+
+  @override
+  String toString() => 'Account declaration: ${account}';
+}
