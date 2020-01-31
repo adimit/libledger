@@ -14,7 +14,7 @@ class ParseError implements ParseResult {
 }
 
 class ParseSuccess implements ParseResult {
-  final List<Transaction> transactions;
+  final List<Statement> transactions;
   ParseSuccess(this.transactions);
 }
 

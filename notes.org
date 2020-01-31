@@ -22,10 +22,10 @@ into string currency and string value
 ** DONE Split into different files
 ** DONE Determine behaviour on null description
 It is allowed, descriptions are nullable
-** TODO Add support for account declarations [2/7]
+** TODO Add support for account declarations [3/7]
 =account Foo:Bar=
 - [X] Heterogenuous list of statements
-- [ ] Adapt test harness
+- [X] Adapt test harness
 - [ ] Add isolated test
 - [ ] Add integrated test
 - [X] Declare =Account= data type
