@@ -41,9 +41,7 @@ class TransactionLine {
   TransactionLine(this.account, this.amount);
 
   @override
-  String toString() {
-    return '  $account  $amount';
-  }
+  String toString() => '  $account  $amount';
 }
 
 class Date {
@@ -64,7 +62,5 @@ class Transaction {
   Transaction(this.description, this.date, this.lines);
 
   @override
-  String toString() {
-    return 'Transaction:\n${date.date1} $description\n';
-  }
+  String toString() => 'Transaction:\n${date.date1} $description\n';
 }
