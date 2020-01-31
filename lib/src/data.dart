@@ -1,5 +1,7 @@
 abstract class ParseResult {}
 
+class Statement {}
+
 class ParseError implements ParseResult {
   final String positionDescription;
   final String message;
@@ -54,7 +56,7 @@ class Date {
   String toString() => 'Date "${date1}"';
 }
 
-class Transaction {
+class Transaction implements Statement {
   final String description; //nullable
   final Date date;
   final List<TransactionLine> lines;
