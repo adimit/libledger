@@ -127,5 +127,24 @@ void main() {
       expect(transactions.first.lines[1].amount.value, equals('35'));
       expect(transactions.first.lines[1].amount.currency, equals('₤'));
     });
+
+    parseSuccess<AccountDeclaration>('account declaration', 'account Foo:Bar',
+        (accounts) {
+      expect(accounts.first.account.path, equals(['Foo', 'Bar']));
+    });
+
+    parseSuccess<AccountDeclaration>(
+        'two account declarations', 'account Foo:Bar\naccount Bar:Foo',
+        (accounts) {
+      expect(accounts.length, equals(2));
+    });
+
+    parseFailure('account declaration without account', 'account   ');
+
+    parseSuccess<Statement>('mixed accounts and transactions',
+        '2020-02-01\n  Foo:Bar  30\naccount Foo:Bar', (statements) {
+      expect(statements[0], isA<Transaction>());
+      expect(statements[1], isA<Account>());
+    });
   });
 }
