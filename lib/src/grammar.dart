@@ -52,8 +52,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       ((digit() | char('-') | whitespace()).not() & any()).plus().flatten();
 
   Parser account() =>
-      (ref(accountSegment) & (char(':') & ref(accountSegment)).pick(1).star())
-          .map((accountPath) => [accountPath[0], ...accountPath[1]]);
+      ref(accountSegment).separatedBy(char(':'), includeSeparators: false);
 
   Parser accountSegment() =>
       ((string('  ') | char('\n') | char(':')).not('account segment') & any())
