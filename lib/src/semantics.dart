@@ -33,4 +33,9 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
         return Transaction(parseResult[1], parseResult[0],
             parseResult[2].cast<TransactionLine>());
       });
+
+  @override
+  Parser<AccountDeclaration> accountDeclaration() => super
+      .accountDeclaration()
+      .map((result) => AccountDeclaration(Account(result.cast<String>())));
 }
