@@ -1,5 +1,7 @@
 abstract class ParseResult {}
 
+class Statement {}
+
 class ParseError implements ParseResult {
   final String positionDescription;
   final String message;
@@ -12,7 +14,7 @@ class ParseError implements ParseResult {
 }
 
 class ParseSuccess implements ParseResult {
-  final List<Transaction> transactions;
+  final List<Statement> transactions;
   ParseSuccess(this.transactions);
 }
 
@@ -41,9 +43,7 @@ class TransactionLine {
   TransactionLine(this.account, this.amount);
 
   @override
-  String toString() {
-    return '  $account  $amount';
-  }
+  String toString() => '  $account  $amount';
 }
 
 class Date {
@@ -56,7 +56,7 @@ class Date {
   String toString() => 'Date "${date1}"';
 }
 
-class Transaction {
+class Transaction implements Statement {
   final String description; //nullable
   final Date date;
   final List<TransactionLine> lines;
@@ -64,7 +64,14 @@ class Transaction {
   Transaction(this.description, this.date, this.lines);
 
   @override
-  String toString() {
-    return 'Transaction:\n${date.date1} $description\n';
-  }
+  String toString() => 'Transaction:\n${date.date1} $description\n';
+}
+
+class AccountDeclaration implements Statement {
+  final Account account;
+
+  AccountDeclaration(this.account);
+
+  @override
+  String toString() => 'Account declaration: ${account}';
 }

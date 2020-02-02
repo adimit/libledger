@@ -8,9 +8,10 @@ class LedgerParser extends GrammarParser {
 
 class LedgerParserDefinition extends LedgerGrammarDefinition {
   const LedgerParserDefinition();
+
   @override
   Parser start() =>
-      super.start().map((parses) => parses.whereType<Transaction>());
+      super.start().map((parses) => parses.whereType<Statement>());
 
   @override
   Parser<DateTime> singleDate() =>
@@ -32,4 +33,9 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
         return Transaction(parseResult[1], parseResult[0],
             parseResult[2].cast<TransactionLine>());
       });
+
+  @override
+  Parser<AccountDeclaration> accountDeclaration() => super
+      .accountDeclaration()
+      .map((result) => AccountDeclaration(Account(result.cast<String>())));
 }

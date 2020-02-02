@@ -11,11 +11,11 @@ void noop(dynamic anyArgument) {
   expect(true, isTrue);
 }
 
-void parseSuccess(String description, String subject,
-    [void Function(List<Transaction>) assertions = noop]) {
+void parseSuccess<T extends Statement>(String description, String subject,
+    [void Function(List<T>) assertions = noop]) {
   test('parses $description', () {
     castAndCheck<ParseSuccess>(parseTransactions(subject), (result) {
-      assertions(result.transactions);
+      assertions(result.transactions.cast<T>());
     });
   });
 }
@@ -42,7 +42,7 @@ void main() {
       expect(transactions, isEmpty);
     });
 
-    parseSuccess('transaction declaration with one line',
+    parseSuccess<Transaction>('transaction declaration with one line',
         '''2020/01/09 this is a description
         Account:Number One:Foo''', (transactions) {
       expect(transactions.length, equals(1));
@@ -53,14 +53,15 @@ void main() {
           equals(['Account', 'Number One', 'Foo']));
     });
 
-    parseSuccess(
+    parseSuccess<Transaction>(
         'second date parsed correctly', '''2020/01/22=2020/01/23 description
       Account:foo''', (transactions) {
       expect(transactions.first.date.date1, equals(DateTime(2020, 01, 22)));
       expect(transactions.first.date.date2, equals(DateTime(2020, 01, 23)));
     });
 
-    parseSuccess('transfer with account and amount more whitespace',
+    parseSuccess<Transaction>(
+        'transfer with account and amount more whitespace',
         '''2020/01/09 description
         Account:Number1            20    EUR''', (transactions) {
       expect(transactions.first.lines.first.amount.value, equals('20'));
@@ -68,19 +69,20 @@ void main() {
           equals(['Account', 'Number1']));
     });
 
-    parseSuccess('transfer with two accounts', '''2020/01/09 description
+    parseSuccess<Transaction>(
+        'transfer with two accounts', '''2020/01/09 description
             Account:Number1  20 EUR
             Account:Number2  -20 EUR''', (transactions) {
       expect(transactions.first.lines[1].account.path,
           equals(['Account', 'Number2']));
     });
-    parseSuccess('transfer with two accounts, and only one amount',
+    parseSuccess<Transaction>('transfer with two accounts, and only one amount',
         '''2020/01/09 description
             Account:Number1  20 EUR
             Account:Number2''', (transactions) {
       expect(transactions.first.lines[1].amount, isNull);
     });
-    parseSuccess('extraneous whitespaces around transaction', '''
+    parseSuccess<Transaction>('extraneous whitespaces around transaction', '''
 
 2020/01/09     description     
             Account:Number1           20 EUR        
@@ -93,30 +95,31 @@ void main() {
     parseFailure('a transaction whose lines starts with spaces',
         '   2020-01-17 description\n  foo');
 
-    parseSuccess('amount with currency in front of value',
+    parseSuccess<Transaction>('amount with currency in front of value',
         '2020-01-25 description\n  foo  EUR 25.00', (transactions) {
       expect(transactions.first.lines.first.amount.currency, equals('EUR'));
       expect(transactions.first.lines.first.amount.value, equals('25.00'));
     });
-    parseSuccess('amount with comma as decimal separator',
+    parseSuccess<Transaction>('amount with comma as decimal separator',
         '2020-01-25 description\n  foo  EUR 25,00', (transactions) {
       expect(transactions.first.lines.first.amount.value, equals('25,00'));
     });
-    parseSuccess('amount with negative value',
+    parseSuccess<Transaction>('amount with negative value',
         '2020-01-25 description\n  foo  EUR -25,00', (transactions) {
       expect(transactions.first.lines.first.amount.value, equals('-25,00'));
     });
-    parseSuccess(
+    parseSuccess<Transaction>(
         'transaction without description', '2020/01/29\n  Account:Foo  20 EUR',
         (transactions) {
       expect(transactions.first.description, isNull);
     });
-    parseSuccess('transaction with blank description has null description',
+    parseSuccess<Transaction>(
+        'transaction with blank description has null description',
         '2020/01/29     \n  Account:Foo  20 EUR', (transactions) {
       expect(transactions.first.description, isNull);
     });
 
-    parseSuccess('amount parses correctly without spaces',
+    parseSuccess<Transaction>('amount parses correctly without spaces',
         '2020-01-25 description\n  foo  -25.00€\n  \n  foo  ₤35',
         (transactions) {
       expect(transactions.first.lines.first.amount.value, equals('-25.00'));
@@ -124,5 +127,36 @@ void main() {
       expect(transactions.first.lines[1].amount.value, equals('35'));
       expect(transactions.first.lines[1].amount.currency, equals('₤'));
     });
+
+    parseSuccess<AccountDeclaration>('account declaration', 'account Foo:Bar',
+        (accounts) {
+      expect(accounts.first.account.path, equals(['Foo', 'Bar']));
+    });
+
+    parseSuccess<AccountDeclaration>(
+        'two account declarations', 'account Foo:Bar\naccount Bar:Foo',
+        (accounts) {
+      expect(accounts.length, equals(2));
+    });
+
+    parseFailure('account declaration without account', 'account   ');
+
+    parseFailure(
+        'account declaration starting with a space', '   account Foo:Bar');
+
+    parseSuccess<Statement>('mixed transaction and account',
+        '2020-02-01\n  Foo:Bar  30\naccount Foo:Bar', (statements) {
+      expect(statements[0], isA<Transaction>());
+      expect(statements[1], isA<AccountDeclaration>());
+    });
+
+    parseSuccess<Statement>('mixed account and transaction',
+        'account Foo:Bar Baz\n2020-02-02\n  Foo:Foo  30', (statements) {
+      expect(statements[0], isA<AccountDeclaration>());
+      expect(statements[1], isA<Transaction>());
+    });
+
+    parseSuccess<AccountDeclaration>('account without subpath', 'account Foo',
+        (accounts) => expect(accounts.first.account.path, equals(['Foo'])));
   });
 }
