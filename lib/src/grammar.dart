@@ -8,9 +8,10 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   const LedgerGrammarDefinition();
 
   @override
-  Parser start() => (emptyLine() | ref(transaction)).star().end();
+  Parser start() =>
+      (emptyLine() | ref(transaction) | ref(accountDeclaration)).star().end();
 
-  Parser inlineSpace() => char(' ') | char('\t');
+  Parser inlineSpace() => char(' ', 'single space') | char('\t', 'single tab');
 
   Parser newline() => char('\n');
 
@@ -55,7 +56,9 @@ class LedgerGrammarDefinition extends GrammarDefinition {
           .map((accountPath) => [accountPath[0], ...accountPath[1]]);
 
   Parser accountSegment() =>
-      ((string('  ') | char('\n') | char(':')).not() & any()).plus().flatten();
+      ((string('  ') | char('\n') | char(':')).not('account segment') & any())
+          .plus()
+          .flatten();
 
   Parser date() =>
       ref(singleDate) & (char('=') & ref(singleDate)).pick(1).optional();
@@ -74,4 +77,10 @@ class LedgerGrammarDefinition extends GrammarDefinition {
           ref(dateDelimiter) &
           ref(monthOrDayNumeric))
       .map((chunks) => [chunks[0], chunks[2], chunks[4]]);
+
+  Parser accountDeclaration() => (string('account', 'account declaration') &
+          ref(inlineSpace).plus() &
+          ref(account) &
+          ref(inlineSpace).star())
+      .pick(2);
 }
