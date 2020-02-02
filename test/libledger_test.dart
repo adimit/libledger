@@ -144,10 +144,19 @@ void main() {
     parseFailure(
         'account declaration starting with a space', '   account Foo:Bar');
 
-    parseSuccess<Statement>('mixed accounts and transactions',
+    parseSuccess<Statement>('mixed transaction and account',
         '2020-02-01\n  Foo:Bar  30\naccount Foo:Bar', (statements) {
       expect(statements[0], isA<Transaction>());
-      expect(statements[1], isA<Account>());
+      expect(statements[1], isA<AccountDeclaration>());
     });
+
+    parseSuccess<Statement>('mixed account and transaction',
+        'account Foo:Bar Baz\n2020-02-02\n  Foo:Foo  30', (statements) {
+      expect(statements[0], isA<AccountDeclaration>());
+      expect(statements[1], isA<Transaction>());
+    });
+
+    parseSuccess<AccountDeclaration>('account without subpath', 'account Foo',
+        (accounts) => expect(accounts.first.account.path, equals(['Foo'])));
   });
 }
