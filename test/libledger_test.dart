@@ -141,6 +141,9 @@ void main() {
 
     parseFailure('account declaration without account', 'account   ');
 
+    parseFailure(
+        'account declaration starting with a space', '   account Foo:Bar');
+
     parseSuccess<Statement>('mixed accounts and transactions',
         '2020-02-01\n  Foo:Bar  30\naccount Foo:Bar', (statements) {
       expect(statements[0], isA<Transaction>());
