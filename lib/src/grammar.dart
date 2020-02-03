@@ -24,7 +24,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       ref(date) &
       (ref(inlineSpace).plus() & ref(description)).pick(1).optional() &
       (ref(inlineSpace).star() &
-              char('\n') &
+              ref(newline) &
               ref(transfer).separatedBy(char('\n'), includeSeparators: false))
           .pick(2);
 
