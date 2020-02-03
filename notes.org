@@ -31,13 +31,20 @@ It is allowed, descriptions are nullable
 - [X] Declare =Account= data type
 - [X] Extend grammar
 - [X] Write parser
-** TODO Parse amount value
+** TODO Parse amount value [0/5]
 Allow for different locales, etc.
+- [ ] Look at how hledger does it
+- [ ] Depend on [[https://pub.dev/packages/decimal][decimal]]
+- [ ] Find bignum format without precision loss for dart
+- [ ] Rewrite tests
+- [ ] Add new tests for 1k-marker
 
 ** TODO Make year optional in parsing dates
 Just take the current year?
 ** TODO Find out what happens when more than one line has =null= amount
 ** TODO Add balance method to transaction class
+We'd have to deal with currencies. There's an interesting [[https://deque.blog/2017/08/17/a-study-of-4-money-class-designs-featuring-martin-fowler-kent-beck-and-ward-cunningham-implementations/][blog
+post]]. I like the proposal of using associative maps per currency there.
 ** TODO Add balance assertions
 Should the balance assertion be part of a transaction line, or should
 the parser spit it out as a separate assertion element in the list of
