@@ -1,3 +1,5 @@
+import 'package:decimal/decimal.dart';
+
 abstract class ParseResult {}
 
 class Statement {}
@@ -28,12 +30,21 @@ class Account {
 }
 
 class Amount {
-  final String value;
+  final Decimal _value;
   final String currency; // nullable
 
-  Amount(this.value, this.currency);
+  Amount._(this._value, this.currency);
+
+  /// Create an amount from [value] in [currency]. [value] MUST be formatted
+  /// without 1k separators and with a period radix. It MAY carry a sign and/or a scientific
+  /// notation exponent. OK: -2134.24e2. Not OK: 1.345,30
+  factory Amount(String value, String currency) =>
+    Amount._(Decimal.parse(value), currency);
+
   @override
-  String toString() => 'Amount: $value $currency';
+  String toString() {
+    return '${_value.toStringAsPrecision(2)}' + ((currency == null) ? '':' $currency');
+  }
 }
 
 class TransactionLine {

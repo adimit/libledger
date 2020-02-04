@@ -64,7 +64,7 @@ void main() {
         'transfer with account and amount more whitespace',
         '''2020/01/09 description
         Account:Number1            20    EUR''', (transactions) {
-      expect(transactions.first.lines.first.amount.value, equals('20'));
+          expect(transactions.first.lines.first.amount.toString(), equals('20 EUR'));
       expect(transactions.first.lines.first.account.path,
           equals(['Account', 'Number1']));
     });
@@ -97,16 +97,15 @@ void main() {
 
     parseSuccess<Transaction>('amount with currency in front of value',
         '2020-01-25 description\n  foo  EUR 25.00', (transactions) {
-      expect(transactions.first.lines.first.amount.currency, equals('EUR'));
-      expect(transactions.first.lines.first.amount.value, equals('25.00'));
+      expect(transactions.first.lines.first.amount.toString(), equals('25 EUR'));
     });
     parseSuccess<Transaction>('amount with comma as decimal separator',
         '2020-01-25 description\n  foo  EUR 25,00', (transactions) {
-      expect(transactions.first.lines.first.amount.value, equals('25,00'));
+          expect(transactions.first.lines.first.amount.toString(), equals('25 EUR'));
     });
     parseSuccess<Transaction>('amount with negative value',
         '2020-01-25 description\n  foo  EUR -25,00', (transactions) {
-      expect(transactions.first.lines.first.amount.value, equals('-25,00'));
+          expect(transactions.first.lines.first.amount.toString(), equals('-25 EUR'));
     });
     parseSuccess<Transaction>(
         'transaction without description', '2020/01/29\n  Account:Foo  20 EUR',
@@ -122,10 +121,8 @@ void main() {
     parseSuccess<Transaction>('amount parses correctly without spaces',
         '2020-01-25 description\n  foo  -25.00€\n  \n  foo  ₤35',
         (transactions) {
-      expect(transactions.first.lines.first.amount.value, equals('-25.00'));
-      expect(transactions.first.lines.first.amount.currency, equals('€'));
-      expect(transactions.first.lines[1].amount.value, equals('35'));
-      expect(transactions.first.lines[1].amount.currency, equals('₤'));
+          expect(transactions.first.lines.first.amount.toString(), equals('-25 €'));
+          expect(transactions.first.lines[1].amount.toString(), equals('35 ₤'));
     });
 
     parseSuccess<AccountDeclaration>('account declaration', 'account Foo:Bar',
