@@ -43,7 +43,8 @@ class Amount {
 
   @override
   String toString() {
-    return '${_value.toStringAsPrecision(2)}' + ((currency == null) ? '':' $currency');
+    return _value.toStringAsFixed(2).replaceFirst(RegExp(r'\.00$'), '')
+    + ((currency == null) ? '':' $currency');
   }
 }
 
