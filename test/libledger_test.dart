@@ -64,7 +64,8 @@ void main() {
         'transfer with account and amount more whitespace',
         '''2020/01/09 description
         Account:Number1            20    EUR''', (transactions) {
-          expect(transactions.first.lines.first.amount.toString(), equals('20 EUR'));
+      expect(
+          transactions.first.lines.first.amount.toString(), equals('20 EUR'));
       expect(transactions.first.lines.first.account.path,
           equals(['Account', 'Number1']));
     });
@@ -97,15 +98,18 @@ void main() {
 
     parseSuccess<Transaction>('amount with currency in front of value',
         '2020-01-25 description\n  foo  EUR 25.00', (transactions) {
-      expect(transactions.first.lines.first.amount.toString(), equals('25 EUR'));
+      expect(
+          transactions.first.lines.first.amount.toString(), equals('25 EUR'));
     });
     parseSuccess<Transaction>('amount with comma as decimal separator',
         '2020-01-25 description\n  foo  EUR 25,00', (transactions) {
-          expect(transactions.first.lines.first.amount.toString(), equals('25 EUR'));
+      expect(
+          transactions.first.lines.first.amount.toString(), equals('25 EUR'));
     });
     parseSuccess<Transaction>('amount with negative value',
         '2020-01-25 description\n  foo  EUR -25,00', (transactions) {
-          expect(transactions.first.lines.first.amount.toString(), equals('-25 EUR'));
+      expect(
+          transactions.first.lines.first.amount.toString(), equals('-25 EUR'));
     });
     parseSuccess<Transaction>(
         'transaction without description', '2020/01/29\n  Account:Foo  20 EUR',
@@ -121,8 +125,8 @@ void main() {
     parseSuccess<Transaction>('amount parses correctly without spaces',
         '2020-01-25 description\n  foo  -25.00€\n  \n  foo  ₤35',
         (transactions) {
-          expect(transactions.first.lines.first.amount.toString(), equals('-25 €'));
-          expect(transactions.first.lines[1].amount.toString(), equals('35 ₤'));
+      expect(transactions.first.lines.first.amount.toString(), equals('-25 €'));
+      expect(transactions.first.lines[1].amount.toString(), equals('35 ₤'));
     });
 
     parseSuccess<AccountDeclaration>('account declaration', 'account Foo:Bar',
@@ -155,5 +159,22 @@ void main() {
 
     parseSuccess<AccountDeclaration>('account without subpath', 'account Foo',
         (accounts) => expect(accounts.first.account.path, equals(['Foo'])));
+
+    group('Number format', () {
+      ({
+        'amount with 1k-space and radix comma': '1 000,50 €',
+        'amount with 1k-thin-space and radix comma': '1 000,50 €',
+        'amount with 1k-period and radix comma': '1.000,50 €',
+        'amount with 1k-comma and radix period': '1,000.50 €',
+        'amount without 1k separator and radix comma': '1000,50 €',
+        'amount without 1k separator and radix period': '1000.50 €'
+      }).forEach((comment, number) {
+        parseSuccess<Transaction>(comment, '2020-02-05\n  foo  $number',
+            (transactions) {
+          expect(transactions.first.lines.first.amount.toString(),
+              equals('1000.50 €'));
+        });
+      });
+    });
   });
 }
