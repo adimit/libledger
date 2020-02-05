@@ -39,12 +39,12 @@ class Amount {
   /// without 1k separators and with a period radix. It MAY carry a sign and/or a scientific
   /// notation exponent. OK: -2134.24e2. Not OK: 1.345,30
   factory Amount(String value, String currency) =>
-    Amount._(Decimal.parse(value), currency);
+      Amount._(Decimal.parse(value), currency);
 
   @override
   String toString() {
-    return _value.toStringAsFixed(2).replaceFirst(RegExp(r'\.00$'), '')
-    + ((currency == null) ? '':' $currency');
+    return _value.toStringAsFixed(2).replaceFirst(RegExp(r'\.00$'), '') +
+        ((currency == null) ? '' : ' $currency');
   }
 }
 

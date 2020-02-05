@@ -14,7 +14,7 @@ void main() {
       expect(Amount('1.239', null).toString(), startsWith('1.24'));
     });
     test('Integer amount does not render decimal places', () {
-        expect(Amount('1', null).toString(), startsWith('1'));
+      expect(Amount('1', null).toString(), startsWith('1'));
     });
   });
 }
