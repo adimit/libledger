@@ -31,7 +31,7 @@ It is allowed, descriptions are nullable
 - [X] Declare =Account= data type
 - [X] Extend grammar
 - [X] Write parser
-** TODO Parse amount value [7/10]
+** TODO Parse amount value [8/10]
 Allow for different locales, etc. We'll do an automatic discovery
 first (like hledger). Note that grouping isn't always done by
 threes. Hindi seems to do it [[https://docs.microsoft.com/en-us/globalization/locale/number-formatting][differently]]. It's probably best to just
@@ -43,11 +43,11 @@ ignore the 1k-markers altogether.
 - [X] Add tests for Amount parsing & Serialisation
 - [X] Rewrite old tests that test number amount
 - [X] Fix rendering to omit decimals when we have integers
-- [ ] Add new tests. [[https://docs.oracle.com/cd/E19455-01/806-0169/overview-9/index.html][The formats we want to support]] (German is wrong, it shoud be periods for all 1k seps)
-  - [ ] 1k: =space=, radix: =,=
-  - [ ] 1k: =thin space=, radix: =,=
-  - [ ] 1k: =,=, radix: =.=
-  - [ ] 1k =.=, radix: =,=
+- [X] Add new tests. [[https://docs.oracle.com/cd/E19455-01/806-0169/overview-9/index.html][The formats we want to support]] (German is wrong, it shoud be periods for all 1k seps)
+  - [X] 1k: =space=, radix: =,=
+  - [X] 1k: =thin space=, radix: =,=
+  - [X] 1k: =,=, radix: =.=
+  - [X] 1k =.=, radix: =,=
 - [ ] Adapt grammar
 - [ ] Adapt semantics
 ** TODO Support commodity directive
