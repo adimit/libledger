@@ -75,4 +75,14 @@ There's a [[https://github.com/dart-lang/language/blob/master/accepted/future-re
 The idea is that a client can navigate to the corresponding
 information in the file and excise/manipulate it easily without having
 to re-render the entire file.
+
+The way I see it, we'd have to split =semantics.dart= in two: one would
+parse an AST from the results of the parsers. =ast.dart= contains value
+types with =Token= backing fields. Then =semantics.dart= would read in the
+AST and create the domain objects it currently creats, perhaps backed
+by the AST nodes, though probably private.
+
+For example, the parse for amounts could be split up into AST nodes
+that encapsulating =number= and =currency=. =number= would hold =sign=,
+=digits=, =decimals= as a commodity-agnostic representation.
 ** TODO Publish on pub.dev
