@@ -43,10 +43,28 @@ class LedgerGrammarDefinition extends GrammarDefinition {
         ref(value);
   }
 
-  Parser amountValue() => (char('-').optional() &
-          digit() &
-          (digit() | char(',') | char('.')).star())
-      .flatten();
+  Parser amountValue() => char('-').optional() & (ref(radixComma) | ref(radixPeriod));
+
+  Parser radixComma() =>
+      digit()
+          .plus()
+          .flatten('integer part expected')
+          .separatedBy(char(' ') | char('.') | char(' '),
+              includeSeparators: false)
+          .map((thousandGroups) => thousandGroups.join()) &
+      (char(',') & digit('decimals expected').plus().flatten())
+          .pick(1)
+          .optional();
+
+  Parser radixPeriod() =>
+      digit()
+          .plus()
+          .flatten('integer part expected')
+          .separatedBy(char(','), includeSeparators: false)
+          .map((groups) => groups.join()) &
+      (char('.') & digit('decimal places expected').plus().flatten())
+          .pick(1)
+          .optional();
 
   Parser amountCurrency() =>
       ((digit() | char('-') | whitespace()).not() & any()).plus().flatten();
