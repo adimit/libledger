@@ -1,4 +1,7 @@
 import 'package:libledger/libledger.dart';
+import 'package:petitparser/petitparser.dart';
+import '../lib/src/grammar.dart';
+import 'package:petitparser/debug.dart' as petit_parser;
 import 'package:test/test.dart';
 
 void castAndCheck<T>(dynamic x, void Function(T) f) {
@@ -175,6 +178,23 @@ void main() {
               equals('1000.50 €'));
         });
       });
+    });
+
+    group('individual parser tests', () {
+      final def = LedgerGrammarDefinition();
+      void expectDefinition<T>(Function start, String specimen) {
+        test('$specimen should be ' + T.runtimeType.toString(), () {
+          expect(def.build(start: start).parse(specimen), isA<T>());
+        });
+      }
+
+      expectDefinition<Success>(def.radixPeriodOnly, '1.0');
+      expectDefinition<Failure>(def.radixPeriodOnly, '1,0');
+      expectDefinition<Failure>(def.radixPeriodOnly, '1.0,0');
+
+      expectDefinition<Success>(def.radixCommaOnly, '1,0');
+      expectDefinition<Failure>(def.radixCommaOnly, '1.0');
+      expectDefinition<Failure>(def.radixCommaOnly, '1,0.0');
     });
   });
 }
