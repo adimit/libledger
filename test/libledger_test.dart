@@ -180,13 +180,19 @@ void main() {
       });
     });
 
-    group('individual parser tests', () {
+    group('individual definitions', () {
       final def = LedgerGrammarDefinition();
       void expectDefinition<T>(Function start, String specimen) {
-        test('$specimen should be ' + T.runtimeType.toString(), () {
+        final functionName = start.toString().substring(42);
+        test('$functionName should parse $specimen as $T', () {
           expect(def.build(start: start).parse(specimen), isA<T>());
         });
       }
+
+      expectDefinition<Success>(def.radixPeriodOnly, '1');
+      expectDefinition<Success>(def.radixCommaOnly, '1');
+      expectDefinition<Success>(def.radixPeriodWith1k, '1');
+      expectDefinition<Success>(def.radixCommaWith1k, '1');
 
       expectDefinition<Success>(def.radixPeriodOnly, '1.0');
       expectDefinition<Failure>(def.radixPeriodOnly, '1,0');
@@ -195,6 +201,15 @@ void main() {
       expectDefinition<Success>(def.radixCommaOnly, '1,0');
       expectDefinition<Failure>(def.radixCommaOnly, '1.0');
       expectDefinition<Failure>(def.radixCommaOnly, '1,0.0');
+
+      expectDefinition<Success>(def.radixCommaWith1k, '1 0,0');
+      expectDefinition<Success>(def.radixCommaWith1k, '1.0,0');
+      expectDefinition<Success>(def.radixCommaWith1k, '1 0,0');
+      expectDefinition<Success>(def.radixCommaWith1k, '10,0');
+      expectDefinition<Failure>(def.radixCommaWith1k, '1,0.0');
+
+      expectDefinition<Success>(def.radixPeriodWith1k, '1,0.0');
+      expectDefinition<Failure>(def.radixPeriodWith1k, '1.0,0');
     });
   });
 }
