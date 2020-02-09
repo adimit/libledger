@@ -177,6 +177,13 @@ void main() {
           expect(transactions.first.lines.first.amount.toString(),
               equals('1000.50 €'));
         });
+
+        // and negative numbers
+        parseSuccess<Transaction>('negative $comment', '2020-02-05\n  foo  -$number',
+            (transactions) {
+          expect(transactions.first.lines.first.amount.toString(),
+              equals('-1000.50 €'));
+        });
       });
     });
 
