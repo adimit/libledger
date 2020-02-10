@@ -53,7 +53,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
           .plus()
           .flatten('integer part expected') &
       ref(radixComma).optional() &
-      char('.').not('not followed by period');
+      (char('.') | (char(' ') & digit())).not('not followed by period');
 
   Parser radixPeriodOnly() =>
       digit('digits before radix period')
