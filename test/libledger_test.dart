@@ -179,8 +179,8 @@ void main() {
         });
 
         // and negative numbers
-        parseSuccess<Transaction>('negative $comment', '2020-02-05\n  foo  -$number',
-            (transactions) {
+        parseSuccess<Transaction>(
+            'negative $comment', '2020-02-05\n  foo  -$number', (transactions) {
           expect(transactions.first.lines.first.amount.toString(),
               equals('-1000.50 €'));
         });
@@ -189,12 +189,24 @@ void main() {
 
     group('individual definitions', () {
       final def = LedgerGrammarDefinition();
-      void expectDefinition<T>(Function start, String specimen) {
+      void expectDefinition<T extends Result>(Function start, String specimen,
+          [void Function(T) assertions = noop]) {
         final functionName = start.toString().substring(42);
         test('$functionName should parse $specimen as $T', () {
-          expect(def.build(start: start).parse(specimen), isA<T>());
+          final result = def.build(start: start).parse(specimen);
+          print(result);
+          expect(result, isA<T>());
+          assertions(result);
         });
       }
+      void is10point0(Success result) =>  expect(
+          result.value,
+          equals([null, ['10', '0', null]])
+      );
+
+      expectDefinition<Success>(def.amountValue, '1 0,0', is10point0);
+      expectDefinition<Success>(def.amountValue, '1.0,0', is10point0);
+      expectDefinition<Success>(def.amountValue, '1,0.0', is10point0);
 
       expectDefinition<Success>(def.radixPeriodOnly, '1');
       expectDefinition<Success>(def.radixCommaOnly, '1');
@@ -209,8 +221,8 @@ void main() {
       expectDefinition<Failure>(def.radixCommaOnly, '1.0');
       expectDefinition<Failure>(def.radixCommaOnly, '1,0.0');
 
-      expectDefinition<Success>(def.radixCommaWith1k, '1 0,0');
       expectDefinition<Success>(def.radixCommaWith1k, '1.0,0');
+      expectDefinition<Success>(def.radixCommaWith1k, '1 0,0');
       expectDefinition<Success>(def.radixCommaWith1k, '1 0,0');
       expectDefinition<Success>(def.radixCommaWith1k, '10,0');
       expectDefinition<Failure>(def.radixCommaWith1k, '1,0.0');
