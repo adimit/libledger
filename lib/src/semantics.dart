@@ -26,7 +26,6 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
 
   @override
   Parser<Amount> amount() => super.amount().map((result) {
-        print(result);
         final number = result[0];
         final currency = result[1];
         final sign = number[0] ?? '';
@@ -34,7 +33,6 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
         final decimals = number[1][1] ?? '';
         final decimalFormatString = '$sign$digits.$decimals';
 
-        print(decimalFormatString);
         return Amount(decimalFormatString, currency);
       });
 
