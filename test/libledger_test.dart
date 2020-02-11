@@ -163,7 +163,7 @@ void main() {
     parseSuccess<AccountDeclaration>('account without subpath', 'account Foo',
         (accounts) => expect(accounts.first.account.path, equals(['Foo'])));
 
-    group('Number format', () {
+    group('number format', () {
       ({
         'amount with 1k-space and radix comma': '1 000,50 €',
         'amount with 1k-thin-space and radix comma': '1 000,50 €',
@@ -194,7 +194,6 @@ void main() {
         final functionName = start.toString().substring(42);
         test('$functionName should parse $specimen as $T', () {
           final result = def.build(start: start).parse(specimen);
-          print(result);
           expect(result, isA<T>());
           assertions(result);
         });
@@ -210,8 +209,8 @@ void main() {
 
       expectDefinition<Success>(def.radixPeriodOnly, '1');
       expectDefinition<Success>(def.radixCommaOnly, '1');
-      expectDefinition<Success>(def.radixPeriodWith1k, '1');
-      expectDefinition<Success>(def.radixCommaWith1k, '1');
+      expectDefinition<Failure>(def.radixPeriodWith1k, '1');
+      expectDefinition<Failure>(def.radixCommaWith1k, '1');
 
       expectDefinition<Success>(def.radixPeriodOnly, '1.0');
       expectDefinition<Failure>(def.radixPeriodOnly, '1,0');

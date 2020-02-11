@@ -45,8 +45,8 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 
   Parser amountValue() =>
       char('-', 'negative sign').optional() &
-      ((ref(radixCommaOnly) | ref(radixPeriodOnly)) |
-          (ref(radixCommaWith1k) | ref(radixPeriodWith1k)));
+      ((ref(radixCommaWith1k) | ref(radixPeriodWith1k)) |
+          (ref(radixCommaOnly) | ref(radixPeriodOnly)));
 
   Parser radixCommaOnly() =>
       digit('digits before radix comma')
@@ -80,7 +80,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
                   char(' ', '1k sep thin space'),
               includeSeparators: false)
           .map((thousandGroups) => thousandGroups.join()) &
-          ref(radixComma).optional() &
+          ref(radixComma) &
       char('.').not('not followed by period');
 
   Parser radixPeriodWith1k() =>
@@ -89,7 +89,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
           .flatten('integer part')
           .separatedBy(char(',', '1k sep comma'), includeSeparators: false)
           .map((groups) => groups.join()) &
-      ref(radixPeriod).optional() &
+      ref(radixPeriod) &
       char(',').not('not followed by comma');
 
   Parser amountCurrency() =>
