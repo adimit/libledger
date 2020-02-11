@@ -1,6 +1,7 @@
 import 'package:libledger/libledger.dart';
 import 'package:petitparser/petitparser.dart';
 import '../lib/src/grammar.dart';
+import '../lib/src/semantics.dart';
 import 'package:petitparser/debug.dart' as petit_parser;
 import 'package:test/test.dart';
 
@@ -187,47 +188,63 @@ void main() {
       });
     });
 
-    group('individual definitions', () {
+    void expectDefinition<T extends Result>(LedgerGrammarDefinition def,
+        Function start, String specimen, dynamic expected) {
+      final functionName = start.toString().substring(42);
+      test('$functionName should parse $specimen as $T', () {
+        final result = def.build(start: start).parse(specimen);
+        expect(result, isA<T>());
+        if (expected != null) {
+          expect(result.value, equals(expected));
+        }
+      });
+    }
+
+    group('parser definitions', () {
+      final def = LedgerParserDefinition();
+      final expectParser = <T extends Result>(start, specimen,
+              [assertions]) =>
+          expectDefinition<T>(def, start, specimen, assertions);
+
+      expectParser<Success>(def.amount, '1', Amount('1.0', null));
+    });
+
+    group('grammar definitions', () {
       final def = LedgerGrammarDefinition();
-      void expectDefinition<T extends Result>(Function start, String specimen,
-          [void Function(T) assertions = noop]) {
-        final functionName = start.toString().substring(42);
-        test('$functionName should parse $specimen as $T', () {
-          final result = def.build(start: start).parse(specimen);
-          expect(result, isA<T>());
-          assertions(result);
-        });
-      }
-      void is10point0(Success result) =>  expect(
-          result.value,
-          equals([null, ['10', '0', null]])
-      );
+      final expectGrammar = <T extends Result>(start, specimen, [assertions]) =>
+          expectDefinition<T>(def, start, specimen, assertions);
 
-      expectDefinition<Success>(def.amountValue, '1 0,0', is10point0);
-      expectDefinition<Success>(def.amountValue, '1.0,0', is10point0);
-      expectDefinition<Success>(def.amountValue, '1,0.0', is10point0);
+      final tenPointZero = [
+        null,
+        ['10', '0', null]
+      ];
 
-      expectDefinition<Success>(def.radixPeriodOnly, '1');
-      expectDefinition<Success>(def.radixCommaOnly, '1');
-      expectDefinition<Failure>(def.radixPeriodWith1k, '1');
-      expectDefinition<Failure>(def.radixCommaWith1k, '1');
+      expectGrammar<Success>(def.amountValue, '1 0,0', tenPointZero);
+      expectGrammar<Success>(def.amountValue, '1.0,0', tenPointZero);
+      expectGrammar<Success>(def.amountValue, '1,0.0', tenPointZero);
+      expectGrammar<Success>(def.amountValue, '1');
 
-      expectDefinition<Success>(def.radixPeriodOnly, '1.0');
-      expectDefinition<Failure>(def.radixPeriodOnly, '1,0');
-      expectDefinition<Failure>(def.radixPeriodOnly, '1.0,0');
+      expectGrammar<Success>(def.radixPeriodOnly, '1');
+      expectGrammar<Success>(def.radixCommaOnly, '1');
+      expectGrammar<Failure>(def.radixPeriodWith1k, '1');
+      expectGrammar<Failure>(def.radixCommaWith1k, '1');
 
-      expectDefinition<Success>(def.radixCommaOnly, '1,0');
-      expectDefinition<Failure>(def.radixCommaOnly, '1.0');
-      expectDefinition<Failure>(def.radixCommaOnly, '1,0.0');
+      expectGrammar<Success>(def.radixPeriodOnly, '1.0');
+      expectGrammar<Failure>(def.radixPeriodOnly, '1,0');
+      expectGrammar<Failure>(def.radixPeriodOnly, '1.0,0');
 
-      expectDefinition<Success>(def.radixCommaWith1k, '1.0,0');
-      expectDefinition<Success>(def.radixCommaWith1k, '1 0,0');
-      expectDefinition<Success>(def.radixCommaWith1k, '1 0,0');
-      expectDefinition<Success>(def.radixCommaWith1k, '10,0');
-      expectDefinition<Failure>(def.radixCommaWith1k, '1,0.0');
+      expectGrammar<Success>(def.radixCommaOnly, '1,0');
+      expectGrammar<Failure>(def.radixCommaOnly, '1.0');
+      expectGrammar<Failure>(def.radixCommaOnly, '1,0.0');
 
-      expectDefinition<Success>(def.radixPeriodWith1k, '1,0.0');
-      expectDefinition<Failure>(def.radixPeriodWith1k, '1.0,0');
+      expectGrammar<Success>(def.radixCommaWith1k, '1.0,0');
+      expectGrammar<Success>(def.radixCommaWith1k, '1 0,0');
+      expectGrammar<Success>(def.radixCommaWith1k, '1 0,0');
+      expectGrammar<Success>(def.radixCommaWith1k, '10,0');
+      expectGrammar<Failure>(def.radixCommaWith1k, '1,0.0');
+
+      expectGrammar<Success>(def.radixPeriodWith1k, '1,0.0');
+      expectGrammar<Failure>(def.radixPeriodWith1k, '1.0,0');
     });
   });
 }
