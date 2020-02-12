@@ -34,14 +34,12 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       (whitespace().and() & ref(account).trim() & ref(amount).optional())
           .map((parseResult) => [parseResult[1], parseResult[2]]);
 
-  Parser amount() {
-    final value = () => (ref(amountValue) & ref(inlineSpace).star()).pick(0);
-    final currency =
-        () => (ref(amountCurrency) & ref(inlineSpace).star()).pick(0);
-    return (ref(value) & ref(currency)) |
+  Parser amount() => (ref(value) & ref(currency)) |
         (ref(currency) & ref(value)).map((result) => result.reversed.toList()) |
-        ref(value);
-  }
+        ref(value).map((result) => [result, null]);
+
+  Parser value() => (ref(amountValue) & ref(inlineSpace).star()).pick(0);
+  Parser currency() => (ref(amountCurrency) & ref(inlineSpace).star()).pick(0);
 
   Parser amountValue() =>
       char('-', 'negative sign').optional() &
