@@ -208,7 +208,7 @@ void main() {
 
       expectParser<Success>(def.amount, '1', Amount('1.0', null));
       expectParser<Success>(def.amount, '1.0', Amount('1.0', null));
-      expectParser<Success>(def.amount, '1.0 €', Amount('1.0', null));
+      expectParser<Success>(def.amount, '1.0 €', Amount('1.0', '€'));
     });
 
     group('grammar definitions', () {
