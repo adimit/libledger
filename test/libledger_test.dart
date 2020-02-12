@@ -207,6 +207,8 @@ void main() {
           expectDefinition<T>(def, start, specimen, assertions);
 
       expectParser<Success>(def.amount, '1', Amount('1.0', null));
+      expectParser<Success>(def.amount, '1.0', Amount('1.0', null));
+      expectParser<Success>(def.amount, '1.0 €', Amount('1.0', null));
     });
 
     group('grammar definitions', () {
