@@ -2,7 +2,6 @@ import 'package:libledger/libledger.dart';
 import 'package:petitparser/petitparser.dart';
 import '../lib/src/grammar.dart';
 import '../lib/src/semantics.dart';
-import 'package:petitparser/debug.dart' as petit_parser;
 import 'package:test/test.dart';
 
 void castAndCheck<T>(dynamic x, void Function(T) f) {
