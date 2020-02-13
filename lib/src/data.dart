@@ -1,3 +1,5 @@
+import 'package:decimal/decimal.dart';
+
 abstract class ParseResult {}
 
 class Statement {}
@@ -28,12 +30,32 @@ class Account {
 }
 
 class Amount {
-  final String value;
+  final Decimal _value;
   final String currency; // nullable
 
-  Amount(this.value, this.currency);
+  Amount._(this._value, this.currency);
+
+  /// Create an amount from [value] in [currency]. [value] MUST be formatted
+  /// without 1k separators and with a period radix. It MAY carry a sign and/or a scientific
+  /// notation exponent. OK: -2134.24e2. Not OK: 1.345,30
+  /// [currency] is an arbitrary string discriminator. It does not have any semantics.
+  factory Amount(String value, String currency) =>
+      Amount._(Decimal.parse(value), currency);
+
   @override
-  String toString() => 'Amount: $value $currency';
+  String toString() =>
+      _value.toStringAsFixed(2).replaceFirst(RegExp(r'\.00$'), '') +
+      ((currency == null) ? '' : ' $currency');
+
+  @override
+  int get hashCode => _value.hashCode ^ currency.hashCode;
+
+  @override
+  // FIXME for some reason, the runtime types are always different, and the
+  // 'is' typecheck fails. Even though they *are* the same runtime type
+  bool operator ==(o) =>
+      o.runtimeType.toString() == runtimeType.toString() &&
+      o.hashCode == hashCode;
 }
 
 class TransactionLine {

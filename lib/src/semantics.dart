@@ -25,8 +25,16 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
       TransactionLine(Account(result[0].cast<String>()), result[1]));
 
   @override
-  Parser<Amount> amount() =>
-      super.amount().map((result) => Amount(result[0], result[1]));
+  Parser<Amount> amount() => super.amount().map((result) {
+        final number = result[0];
+        final currency = result[1];
+        final sign = number[0] ?? '';
+        final digits = number[1][0];
+        final decimals = number[1][1] ?? '';
+        final decimalFormatString = '$sign$digits.$decimals';
+
+        return Amount(decimalFormatString, currency);
+      });
 
   @override
   Parser<Transaction> transaction() => super.transaction().map((parseResult) {

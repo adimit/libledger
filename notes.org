@@ -31,22 +31,59 @@ It is allowed, descriptions are nullable
 - [X] Declare =Account= data type
 - [X] Extend grammar
 - [X] Write parser
-** TODO Parse amount value
-Allow for different locales, etc.
+** DONE Parse amount value [10/10]
+Allow for different locales, etc. We'll do an automatic discovery
+first (like hledger). Note that grouping isn't always done by
+threes. Hindi seems to do it [[https://docs.microsoft.com/en-us/globalization/locale/number-formatting][differently]]. It's probably best to just
+ignore the 1k-markers altogether.
+- [X] Look at how hledger does it
+- [X] Find bignum format without precision loss for dart
+- [X] Depend on [[https://pub.dev/packages/decimal][decimal]] for arbitrary precision
+- [X] Adapt types in data
+- [X] Add tests for Amount parsing & Serialisation
+- [X] Rewrite old tests that test number amount
+- [X] Fix rendering to omit decimals when we have integers
+- [X] Add new tests. [[https://docs.oracle.com/cd/E19455-01/806-0169/overview-9/index.html][The formats we want to support]] (German is wrong, it shoud be periods for all 1k seps)
+  - [X] 1k: =space=, radix: =,=
+  - [X] 1k: =thin space=, radix: =,=
+  - [X] 1k: =,=, radix: =.=
+  - [X] 1k =.=, radix: =,=
+- [X] Adapt grammar
+- [X] Adapt semantics
+** TODO Support commodity directive
+=commodity Apples 1.000,00=
 
+What happens with multiple declarations? How can we keep parser state?
+** TODO Render amounts with the correct commodity format
+** TODO Allow minus sign on the left side of commodity
+Hledger [[https://hledger.org/journal.html#amounts][allows it]]...
 ** TODO Make year optional in parsing dates
 Just take the current year?
 ** TODO Find out what happens when more than one line has =null= amount
 ** TODO Add balance method to transaction class
+We'd have to deal with currencies. There's an interesting [[https://deque.blog/2017/08/17/a-study-of-4-money-class-designs-featuring-martin-fowler-kent-beck-and-ward-cunningham-implementations/][blog
+post]]. I like the proposal of using associative maps per currency there.
 ** TODO Add balance assertions
 Should the balance assertion be part of a transaction line, or should
 the parser spit it out as a separate assertion element in the list of
 transactions/parse results?
 ** TODO Add serialisation
 ** TODO Attempt to re-enable nullable experiment
+There's a [[https://github.com/dart-lang/language/blob/master/accepted/future-releases/nnbd/feature-specification.md][spec]] and a [[https://github.com/dart-lang/language/blob/master/accepted/future-releases/nnbd/roadmap.md][roadmap]].
 ** TODO Support comments
 ** TODO Consider adding position information to parse result
 The idea is that a client can navigate to the corresponding
 information in the file and excise/manipulate it easily without having
 to re-render the entire file.
+
+The way I see it, we'd have to split =semantics.dart= in two: one would
+parse an AST from the results of the parsers. =ast.dart= contains value
+types with =Token= backing fields. Then =semantics.dart= would read in the
+AST and create the domain objects it currently creats, perhaps backed
+by the AST nodes, though probably private.
+
+For example, the parse for amounts could be split up into AST nodes
+that encapsulating =number= and =currency=. =number= would hold =sign=,
+=digits=, =decimals= as a commodity-agnostic representation.
+** TODO Find out why the type check in Amount.equals fails
 ** TODO Publish on pub.dev

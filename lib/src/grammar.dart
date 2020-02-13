@@ -34,19 +34,62 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       (whitespace().and() & ref(account).trim() & ref(amount).optional())
           .map((parseResult) => [parseResult[1], parseResult[2]]);
 
-  Parser amount() {
-    final value = () => (ref(amountValue) & ref(inlineSpace).star()).pick(0);
-    final currency =
-        () => (ref(amountCurrency) & ref(inlineSpace).star()).pick(0);
-    return (ref(value) & ref(currency)) |
-        (ref(currency) & ref(value)).map((result) => result.reversed.toList()) |
-        ref(value);
-  }
+  Parser amount() =>
+      (ref(value) & ref(currency)) |
+      (ref(currency) & ref(value)).map((result) => result.reversed.toList()) |
+      ref(value).map((result) => [result, null]);
 
-  Parser amountValue() => (char('-').optional() &
-          digit() &
-          (digit() | char(',') | char('.')).star())
-      .flatten();
+  Parser value() => (ref(amountValue) & ref(inlineSpace).star()).pick(0);
+  Parser currency() => (ref(amountCurrency) & ref(inlineSpace).star()).pick(0);
+
+  Parser amountValue() =>
+      char('-', 'negative sign').optional() &
+      ((ref(radixCommaWith1k) | ref(radixPeriodWith1k)) |
+          (ref(radixCommaOnly) | ref(radixPeriodOnly)));
+
+  Parser radixCommaOnly() =>
+      digit('digits before radix comma')
+          .plus()
+          .flatten('integer part expected') &
+      ref(radixComma).optional() &
+      (char('.') | (char(' ') & digit())).not('not followed by period');
+
+  Parser radixPeriodOnly() =>
+      digit('digits before radix period')
+          .plus()
+          .flatten('integer part expected') &
+      ref(radixPeriod).optional() &
+      char(',').not('not followed by comma');
+
+  Parser radixComma() =>
+      (char(',', 'radix comma') & digit('decimal digit').plus().flatten())
+          .pick(1);
+
+  Parser radixPeriod() =>
+      (char('.', 'radix period') & digit('decimal digit').plus().flatten())
+          .pick(1);
+
+  Parser radixCommaWith1k() =>
+      digit('digits before radix comma with 1k')
+          .plus()
+          .flatten('integer part')
+          .separatedBy(
+              char(' ', '1k sep space') |
+                  char('.', '1k sep period') |
+                  char(' ', '1k sep thin space'),
+              includeSeparators: false)
+          .map((thousandGroups) => thousandGroups.join()) &
+      ref(radixComma) &
+      char('.').not('not followed by period');
+
+  Parser radixPeriodWith1k() =>
+      digit('digits before radix period with 1k')
+          .plus()
+          .flatten('integer part')
+          .separatedBy(char(',', '1k sep comma'), includeSeparators: false)
+          .map((groups) => groups.join()) &
+      ref(radixPeriod) &
+      char(',').not('not followed by comma');
 
   Parser amountCurrency() =>
       ((digit() | char('-') | whitespace()).not() & any()).plus().flatten();

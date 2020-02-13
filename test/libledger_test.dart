@@ -1,4 +1,8 @@
 import 'package:libledger/libledger.dart';
+import 'package:petitparser/petitparser.dart';
+import '../lib/src/grammar.dart';
+import '../lib/src/semantics.dart';
+import 'package:petitparser/debug.dart' as petit_parser;
 import 'package:test/test.dart';
 
 void castAndCheck<T>(dynamic x, void Function(T) f) {
@@ -64,7 +68,8 @@ void main() {
         'transfer with account and amount more whitespace',
         '''2020/01/09 description
         Account:Number1            20    EUR''', (transactions) {
-      expect(transactions.first.lines.first.amount.value, equals('20'));
+      expect(
+          transactions.first.lines.first.amount.toString(), equals('20 EUR'));
       expect(transactions.first.lines.first.account.path,
           equals(['Account', 'Number1']));
     });
@@ -97,16 +102,18 @@ void main() {
 
     parseSuccess<Transaction>('amount with currency in front of value',
         '2020-01-25 description\n  foo  EUR 25.00', (transactions) {
-      expect(transactions.first.lines.first.amount.currency, equals('EUR'));
-      expect(transactions.first.lines.first.amount.value, equals('25.00'));
+      expect(
+          transactions.first.lines.first.amount.toString(), equals('25 EUR'));
     });
     parseSuccess<Transaction>('amount with comma as decimal separator',
         '2020-01-25 description\n  foo  EUR 25,00', (transactions) {
-      expect(transactions.first.lines.first.amount.value, equals('25,00'));
+      expect(
+          transactions.first.lines.first.amount.toString(), equals('25 EUR'));
     });
     parseSuccess<Transaction>('amount with negative value',
         '2020-01-25 description\n  foo  EUR -25,00', (transactions) {
-      expect(transactions.first.lines.first.amount.value, equals('-25,00'));
+      expect(
+          transactions.first.lines.first.amount.toString(), equals('-25 EUR'));
     });
     parseSuccess<Transaction>(
         'transaction without description', '2020/01/29\n  Account:Foo  20 EUR',
@@ -122,10 +129,8 @@ void main() {
     parseSuccess<Transaction>('amount parses correctly without spaces',
         '2020-01-25 description\n  foo  -25.00€\n  \n  foo  ₤35',
         (transactions) {
-      expect(transactions.first.lines.first.amount.value, equals('-25.00'));
-      expect(transactions.first.lines.first.amount.currency, equals('€'));
-      expect(transactions.first.lines[1].amount.value, equals('35'));
-      expect(transactions.first.lines[1].amount.currency, equals('₤'));
+      expect(transactions.first.lines.first.amount.toString(), equals('-25 €'));
+      expect(transactions.first.lines[1].amount.toString(), equals('35 ₤'));
     });
 
     parseSuccess<AccountDeclaration>('account declaration', 'account Foo:Bar',
@@ -158,5 +163,89 @@ void main() {
 
     parseSuccess<AccountDeclaration>('account without subpath', 'account Foo',
         (accounts) => expect(accounts.first.account.path, equals(['Foo'])));
+
+    group('number format', () {
+      ({
+        'amount with 1k-space and radix comma': '1 000,50 €',
+        'amount with 1k-thin-space and radix comma': '1 000,50 €',
+        'amount with 1k-period and radix comma': '1.000,50 €',
+        'amount with 1k-comma and radix period': '1,000.50 €',
+        'amount without 1k separator and radix comma': '1000,50 €',
+        'amount without 1k separator and radix period': '1000.50 €'
+      }).forEach((comment, number) {
+        parseSuccess<Transaction>(comment, '2020-02-05\n  foo  $number',
+            (transactions) {
+          expect(transactions.first.lines.first.amount.toString(),
+              equals('1000.50 €'));
+        });
+
+        // and negative numbers
+        parseSuccess<Transaction>(
+            'negative $comment', '2020-02-05\n  foo  -$number', (transactions) {
+          expect(transactions.first.lines.first.amount.toString(),
+              equals('-1000.50 €'));
+        });
+      });
+    });
+
+    void expectDefinition<T extends Result>(LedgerGrammarDefinition def,
+        Function start, String specimen, dynamic expected) {
+      final functionName = start.toString().substring(42);
+      test('$functionName should parse $specimen as $T', () {
+        final result = def.build(start: start).parse(specimen);
+        expect(result, isA<T>());
+        if (expected != null) {
+          expect(result.value, equals(expected));
+        }
+      });
+    }
+
+    group('parser definitions', () {
+      final def = LedgerParserDefinition();
+      final expectParser = <T extends Result>(start, specimen, [assertions]) =>
+          expectDefinition<T>(def, start, specimen, assertions);
+
+      expectParser<Success>(def.amount, '1', Amount('1.0', null));
+      expectParser<Success>(def.amount, '1.0', Amount('1.0', null));
+      expectParser<Success>(def.amount, '1.0 €', Amount('1.0', '€'));
+    });
+
+    group('grammar definitions', () {
+      final def = LedgerGrammarDefinition();
+      final expectGrammar = <T extends Result>(start, specimen, [assertions]) =>
+          expectDefinition<T>(def, start, specimen, assertions);
+
+      final tenPointZero = [
+        null,
+        ['10', '0', null]
+      ];
+
+      expectGrammar<Success>(def.amountValue, '1 0,0', tenPointZero);
+      expectGrammar<Success>(def.amountValue, '1.0,0', tenPointZero);
+      expectGrammar<Success>(def.amountValue, '1,0.0', tenPointZero);
+      expectGrammar<Success>(def.amountValue, '1');
+
+      expectGrammar<Success>(def.radixPeriodOnly, '1');
+      expectGrammar<Success>(def.radixCommaOnly, '1');
+      expectGrammar<Failure>(def.radixPeriodWith1k, '1');
+      expectGrammar<Failure>(def.radixCommaWith1k, '1');
+
+      expectGrammar<Success>(def.radixPeriodOnly, '1.0');
+      expectGrammar<Failure>(def.radixPeriodOnly, '1,0');
+      expectGrammar<Failure>(def.radixPeriodOnly, '1.0,0');
+
+      expectGrammar<Success>(def.radixCommaOnly, '1,0');
+      expectGrammar<Failure>(def.radixCommaOnly, '1.0');
+      expectGrammar<Failure>(def.radixCommaOnly, '1,0.0');
+
+      expectGrammar<Success>(def.radixCommaWith1k, '1.0,0');
+      expectGrammar<Success>(def.radixCommaWith1k, '1 0,0');
+      expectGrammar<Success>(def.radixCommaWith1k, '1 0,0');
+      expectGrammar<Success>(def.radixCommaWith1k, '10,0');
+      expectGrammar<Failure>(def.radixCommaWith1k, '1,0.0');
+
+      expectGrammar<Success>(def.radixPeriodWith1k, '1,0.0');
+      expectGrammar<Failure>(def.radixPeriodWith1k, '1.0,0');
+    });
   });
 }
