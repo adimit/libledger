@@ -31,7 +31,7 @@ It is allowed, descriptions are nullable
 - [X] Declare =Account= data type
 - [X] Extend grammar
 - [X] Write parser
-** TODO Parse amount value [8/10]
+** DONE Parse amount value [10/10]
 Allow for different locales, etc. We'll do an automatic discovery
 first (like hledger). Note that grouping isn't always done by
 threes. Hindi seems to do it [[https://docs.microsoft.com/en-us/globalization/locale/number-formatting][differently]]. It's probably best to just
@@ -48,8 +48,8 @@ ignore the 1k-markers altogether.
   - [X] 1k: =thin space=, radix: =,=
   - [X] 1k: =,=, radix: =.=
   - [X] 1k =.=, radix: =,=
-- [ ] Adapt grammar
-- [ ] Adapt semantics
+- [X] Adapt grammar
+- [X] Adapt semantics
 ** TODO Support commodity directive
 =commodity Apples 1.000,00=
 
@@ -85,4 +85,5 @@ by the AST nodes, though probably private.
 For example, the parse for amounts could be split up into AST nodes
 that encapsulating =number= and =currency=. =number= would hold =sign=,
 =digits=, =decimals= as a commodity-agnostic representation.
+** TODO Find out why the type check in Amount.equals fails
 ** TODO Publish on pub.dev
