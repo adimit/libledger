@@ -34,9 +34,10 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       (whitespace().and() & ref(account).trim() & ref(amount).optional())
           .map((parseResult) => [parseResult[1], parseResult[2]]);
 
-  Parser amount() => (ref(value) & ref(currency)) |
-        (ref(currency) & ref(value)).map((result) => result.reversed.toList()) |
-        ref(value).map((result) => [result, null]);
+  Parser amount() =>
+      (ref(value) & ref(currency)) |
+      (ref(currency) & ref(value)).map((result) => result.reversed.toList()) |
+      ref(value).map((result) => [result, null]);
 
   Parser value() => (ref(amountValue) & ref(inlineSpace).star()).pick(0);
   Parser currency() => (ref(amountCurrency) & ref(inlineSpace).star()).pick(0);
@@ -78,7 +79,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
                   char(' ', '1k sep thin space'),
               includeSeparators: false)
           .map((thousandGroups) => thousandGroups.join()) &
-          ref(radixComma) &
+      ref(radixComma) &
       char('.').not('not followed by period');
 
   Parser radixPeriodWith1k() =>

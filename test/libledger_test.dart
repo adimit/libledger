@@ -202,8 +202,7 @@ void main() {
 
     group('parser definitions', () {
       final def = LedgerParserDefinition();
-      final expectParser = <T extends Result>(start, specimen,
-              [assertions]) =>
+      final expectParser = <T extends Result>(start, specimen, [assertions]) =>
           expectDefinition<T>(def, start, specimen, assertions);
 
       expectParser<Success>(def.amount, '1', Amount('1.0', null));
