@@ -54,6 +54,11 @@ ignore the 1k-markers altogether.
 =commodity Apples 1.000,00=
 
 What happens with multiple declarations? How can we keep parser state?
+
+It might work to declare the =amount= parser as =.settable()=. Then in the
+=commodity= parser, succeed by just setting the =amount= parser. You can
+run amount's sub-parsers in order, and then conditionally, if they
+succeed call =.set()=.
 ** TODO Render amounts with the correct commodity format
 ** TODO Allow minus sign on the left side of commodity
 Hledger [[https://hledger.org/journal.html#amounts][allows it]]...
