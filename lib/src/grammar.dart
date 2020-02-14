@@ -35,9 +35,9 @@ class LedgerGrammarDefinition extends GrammarDefinition {
           .map((parseResult) => [parseResult[1], parseResult[2]]);
 
   Parser amount() =>
-      (ref(value) & ref(currency)) |
+      ((ref(value) & ref(currency)) |
       (ref(currency) & ref(value)).map((result) => result.reversed.toList()) |
-      ref(value).map((result) => [result, null]);
+      ref(value).map((result) => [result, null])).settable();
 
   Parser value() => (ref(amountValue) & ref(inlineSpace).star()).pick(0);
   Parser currency() => (ref(amountCurrency) & ref(inlineSpace).star()).pick(0);
