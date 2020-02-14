@@ -82,6 +82,8 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       ref(radixComma) &
       char('.').not('not followed by period');
 
+  Parser commodity() => (string('commodity') & ref(inlineSpace).plus() & ref(amount)).pick(2);
+
   Parser radixPeriodWith1k() =>
       digit('digits before radix period with 1k')
           .plus()
