@@ -29,8 +29,8 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
         final number = result[0];
         final currency = result[1];
         final sign = number[0] ?? '';
-        final digits = number[1][0];
-        final decimals = number[1][1] ?? '';
+        final digits = number[1][0][0];
+        final decimals = number[1][0][1] ?? '';
         final decimalFormatString = '$sign$digits.$decimals';
 
         return Amount(decimalFormatString, currency);

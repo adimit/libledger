@@ -214,11 +214,6 @@ void main() {
       final expectGrammar = <T extends Result>(start, specimen, [assertions]) =>
           expectDefinition<T>(def, start, specimen, assertions);
 
-      final tenPointZero = [
-        null,
-        ['10', '0', null]
-      ];
-
       group('commodity', () {
         expectGrammar<Success>(def.commodity, 'commodity 1,000.00 EUR');
         expectGrammar<Success>(def.commodity, 'commodity 1 000.00 EUR');
@@ -229,9 +224,9 @@ void main() {
       });
 
       group('amount', () {
-        expectGrammar<Success>(def.amountValue, '1 0,0', tenPointZero);
-        expectGrammar<Success>(def.amountValue, '1.0,0', tenPointZero);
-        expectGrammar<Success>(def.amountValue, '1,0.0', tenPointZero);
+        expectGrammar<Success>(def.amountValue, '1 0,0', [null, [['10', '0', null], [' ', ',']]]);
+        expectGrammar<Success>(def.amountValue, '1.0,0', [null, [['10', '0', null], ['.', ',']]]);
+        expectGrammar<Success>(def.amountValue, '1,0.0', [null, [['10', '0', null], [',', '.']]]);
         expectGrammar<Success>(def.amountValue, '1');
 
         expectGrammar<Success>(def.radixPeriodOnly, '1');
