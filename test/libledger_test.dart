@@ -200,8 +200,29 @@ void main() {
     }
 
     group('commodity integration', () {
-      parseSuccess<Transaction>('commodity declaration and statement',
+      parseSuccess<Transaction>('commodity declaration and statement , .',
           'commodity 1,000.00 €\n2020-02-17\n  Foo  2,123.80', (transactions) {
+        expect(transactions.first.lines.first.amount.toString(),
+            equals('2123.80 €'));
+      });
+
+      parseFailure('commodity declaration and wrong statement',
+          'commodity 1,000.00 €\n2020-02-17\n  Foo  2.123,80');
+
+      parseSuccess<Transaction>('commodity declaration and statement SPACE ,',
+          'commodity 1 000,00 €\n2020-02-17\n  Foo  2 123,80', (transactions) {
+        expect(transactions.first.lines.first.amount.toString(),
+            equals('2123.80 €'));
+      });
+
+      parseSuccess<Transaction>('commodity declaration and statement . ,',
+          'commodity 1.000,00 €\n2020-02-17\n  Foo  2.123,80', (transactions) {
+        expect(transactions.first.lines.first.amount.toString(),
+            equals('2123.80 €'));
+      });
+
+      parseSuccess<Transaction>('commodity declaration and statement THINSPACE ,',
+          'commodity 1 000,00 €\n2020-02-17\n  Foo  2 123,80', (transactions) {
         expect(transactions.first.lines.first.amount.toString(),
             equals('2123.80 €'));
       });
