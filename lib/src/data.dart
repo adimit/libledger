@@ -97,3 +97,11 @@ class AccountDeclaration implements Statement {
   @override
   String toString() => 'Account declaration: ${account}';
 }
+
+class CommodityDeclaration implements Statement {
+  final String radix;
+  final String currency;
+  final String thousandSeparator; // nullable
+
+  CommodityDeclaration(this.radix, this.currency, this.thousandSeparator);
+}
