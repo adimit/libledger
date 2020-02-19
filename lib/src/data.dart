@@ -104,4 +104,7 @@ class CommodityDeclaration implements Statement {
   final String thousandSeparator; // nullable
 
   CommodityDeclaration(this.radix, this.currency, this.thousandSeparator);
+
+  @override
+  String toString() => 'commodity 1${thousandSeparator}000$radix $currency';
 }
