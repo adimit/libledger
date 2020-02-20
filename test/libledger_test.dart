@@ -234,9 +234,9 @@ void main() {
       final expectParser = <T extends Result>(start, specimen, [assertions]) =>
           expectDefinition<T>(def, start, specimen, assertions);
 
-      expectParser<Success>(def.amount, '1', Amount('1.0', null));
-      expectParser<Success>(def.amount, '1.0', Amount('1.0', null));
-      expectParser<Success>(def.amount, '1.0 €', Amount('1.0', '€'));
+      expectParser<Success>(def.amount, '1', Amount('1.0', null, NumberFormat('.', null)));
+      expectParser<Success>(def.amount, '1.0', Amount('1.0', null, NumberFormat('.', null)));
+      expectParser<Success>(def.amount, '1.0 €', Amount('1.0', '€', NumberFormat('.', null)));
     });
 
     group('grammar definitions', () {
