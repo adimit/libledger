@@ -32,17 +32,15 @@ class Account {
 class Amount {
   final Decimal _value;
   final String currency; // nullable
-  final NumberFormat format;
 
-  Amount._(this._value, this.currency, this.format);
+  Amount._(this._value, this.currency);
 
   /// Create an amount from [value] in [currency]. [value] MUST be formatted
   /// without 1k separators and with a period radix. It MAY carry a sign and/or a scientific
   /// notation exponent. OK: -2134.24e2. Not OK: 1.345,30
   /// [currency] is an arbitrary string discriminator. It does not have any semantics.
-  /// [format] is the NumberFormat this amount was parsed with and will be serialised with
-  factory Amount(String value, String currency, NumberFormat format) =>
-      Amount._(Decimal.parse(value), currency, format);
+  factory Amount(String value, String currency) =>
+      Amount._(Decimal.parse(value), currency);
 
   @override
   String toString() =>

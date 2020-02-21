@@ -32,10 +32,8 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
         final digits = number[1][0][0];
         final decimals = number[1][0][1] ?? '';
         final decimalFormatString = '$sign$digits.$decimals';
-        final radix = number[1][1][0];
-        final onekSep = number[1][1][1];
 
-        return Amount(decimalFormatString, currency, NumberFormat(radix, onekSep));
+        return Amount(decimalFormatString, currency);
       });
 
   @override
