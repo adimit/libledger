@@ -43,9 +43,9 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
       });
 
   @override
-  Parser<CommodityDeclaration> commodity() => super.commodity().map((parseResult) {
-
-  });
+  Parser<CommodityDeclaration> commodity() => super.commodity().map(
+    (parseResult) => CommodityDeclaration(parseResult.currency, parseResult.format)
+  );
 
   @override
   Parser<AccountDeclaration> accountDeclaration() => super
