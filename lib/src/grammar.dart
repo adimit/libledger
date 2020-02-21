@@ -85,14 +85,25 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       (digit('digits before radix comma with 1k')
                   .plus()
                   .flatten('integer part')
-                  .separatedBy(char(separator, '1k sep space'), includeSeparators: false)
+                  .separatedBy(char(separator, '1k sep space'),
+                      includeSeparators: false)
                   .map((thousandGroups) => thousandGroups.join()) &
               ref(radixComma) &
               char('.').not('not followed by period'))
-          .map((results) => [results, [separator, ',']]);
+          .map((results) => [
+                results,
+                [separator, ',']
+              ]);
 
   Parser commodity() =>
-      (string('commodity') & ref(inlineSpace).plus() & ref(amount)).pick(2);
+      (string('commodity') & ref(inlineSpace).plus() & ref(amount))
+          .pick(2)
+          .map((amount) {
+        final currency = amount[1];
+        final radix = amount[0][1][1][1];
+        final ksep = amount[0][1][1][0];
+        return [currency, radix, ksep];
+      });
 
   Parser radixPeriodWith1k() => (digit('digits before radix period with 1k')
               .plus()

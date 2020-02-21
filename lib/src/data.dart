@@ -106,12 +106,12 @@ class CommodityDeclaration implements Statement {
 
   @override
   String toString() =>
-      'commodity 1${format.thousandSeparator}000${format.radix} $currency';
+      'commodity 1${format.ksep}000${format.radix} $currency';
 }
 
 class NumberFormat {
   final String radix;
-  final String thousandSeparator; // nullable
+  final String ksep; // nullable
 
-  NumberFormat(this.radix, this.thousandSeparator);
+  NumberFormat({this.radix, this.ksep});
 }
