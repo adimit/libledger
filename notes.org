@@ -70,7 +70,6 @@ succeed call =.set()=.
 - [ ] Add tests for serialisation of amount with new number format
 - [ ] parse commodity statements
 - [ ] set amount parsers as a side effect of parsing =commodity=
-** TODO Render amounts with the correct commodity format
 ** TODO Allow minus sign on the left side of commodity
 Hledger [[https://hledger.org/journal.html#amounts][allows it]]...
 ** TODO Make year optional in parsing dates
