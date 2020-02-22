@@ -9,7 +9,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 
   @override
   Parser start() =>
-      (emptyLine() | ref(transaction) | ref(accountDeclaration)).star().end();
+      (emptyLine() | ref(transaction) | ref(accountDeclaration) | ref(commodity)).star().end();
 
   Parser inlineSpace() => char(' ', 'single space') | char('\t', 'single tab');
 
