@@ -50,7 +50,7 @@ ignore the 1k-markers altogether.
   - [X] 1k =.=, radix: =,=
 - [X] Adapt grammar
 - [X] Adapt semantics
-** TODO Support commodity directive [6/10]
+** TODO Support commodity directive [7/11]
 =commodity Apples 1.000,00=
 
 What happens with multiple declarations? How can we keep parser state?
@@ -66,7 +66,8 @@ succeed call =.set()=.
 - [X] Discriminate between space, thinspace, and comma 1k-markers in format string
 - [X] Add integration tests for all four commodity directives
 - [X] Add commodity statement data type
-- [ ] Add test sfor parsing commodity statements
+- [X] Add test sfor parsing commodity statements
+- [ ] Find a different way to fix transfer of information from account parser to commodity parser
 - [ ] Add tests for serialisation of amount with new number format
 - [ ] parse commodity statements
 - [ ] set amount parsers as a side effect of parsing =commodity=
