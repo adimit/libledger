@@ -22,7 +22,7 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
 
   @override
   Parser<TransactionLine> transfer() => super.transfer().map((result) =>
-      TransactionLine(Account(result[0].cast<String>()), result[1][0]));
+      TransactionLine(Account(result[0].cast<String>()), result[1] != null ? result[1][0] : null));
 
   @override
   Parser amount() => super.amount().map((result) {
