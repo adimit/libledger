@@ -114,4 +114,15 @@ class NumberFormat {
   final String ksep; // nullable
 
   NumberFormat({this.radix, this.ksep});
+
+  @override
+  int get hashCode => radix.hashCode ^ ksep.hashCode;
+
+  @override
+  bool operator ==(o) =>
+      o.runtimeType.toString() == runtimeType.toString() &&
+      o.hashCode == hashCode;
+
+  @override
+  String toString() => "Format radix '${radix}', ksep '${ksep}'";
 }
