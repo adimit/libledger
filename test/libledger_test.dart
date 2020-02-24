@@ -242,11 +242,11 @@ void main() {
           [Amount('1.0', '€'), NumberFormat(radix: '.', ksep: null)]);
 
       expectParser<Success>(def.amount, '1000,0 €',
-          [Amount('1.0', '€'), NumberFormat(radix: ',', ksep: null)]);
+          [Amount('1000.0', '€'), NumberFormat(radix: ',', ksep: null)]);
       expectParser<Success>(def.amount, '1.000,0 €',
-          [Amount('1.0', '€'), NumberFormat(radix: ',', ksep: '.')]);
+          [Amount('1000.0', '€'), NumberFormat(radix: ',', ksep: '.')]);
       expectParser<Success>(def.amount, '1,000.0 €',
-          [Amount('1.0', '€'), NumberFormat(radix: '.', ksep: ',')]);
+          [Amount('1000.0', '€'), NumberFormat(radix: '.', ksep: ',')]);
     });
 
     group('grammar definitions', () {
