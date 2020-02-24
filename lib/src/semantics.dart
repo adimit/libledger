@@ -21,8 +21,10 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
   Parser<Date> date() => super.date().map((parse) => Date(parse[0], parse[1]));
 
   @override
-  Parser<TransactionLine> transfer() => super.transfer().map((result) =>
-      TransactionLine(Account(result[0].cast<String>()), result[1] != null ? result[1][0] : null));
+  Parser<TransactionLine> transfer() =>
+      super.transfer().map((result) => TransactionLine(
+          Account(result[0].cast<String>()),
+          result[1] != null ? result[1][0] : null));
 
   @override
   Parser amount() => super.amount().map((result) {
@@ -35,7 +37,10 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
         final radix = number[1][1][0];
         final ksep = number[1][1][1];
 
-        return [Amount(decimalFormatString, currency), NumberFormat(ksep: ksep, radix: radix)];
+        return [
+          Amount(decimalFormatString, currency),
+          NumberFormat(ksep: ksep, radix: radix)
+        ];
       });
 
   @override
@@ -45,10 +50,8 @@ class LedgerParserDefinition extends LedgerGrammarDefinition {
       });
 
   @override
-  Parser<CommodityDeclaration> commodity() =>
-      super.commodity().map((parseResult) => CommodityDeclaration(
-          parseResult[0],
-          parseResult[1]));
+  Parser<CommodityDeclaration> commodity() => super.commodity().map(
+      (parseResult) => CommodityDeclaration(parseResult[0], parseResult[1]));
 
   @override
   Parser<AccountDeclaration> accountDeclaration() => super

@@ -8,8 +8,12 @@ class LedgerGrammarDefinition extends GrammarDefinition {
   const LedgerGrammarDefinition();
 
   @override
-  Parser start() =>
-      (emptyLine() | ref(transaction) | ref(accountDeclaration) | ref(commodity)).star().end();
+  Parser start() => (emptyLine() |
+          ref(transaction) |
+          ref(accountDeclaration) |
+          ref(commodity))
+      .star()
+      .end();
 
   Parser inlineSpace() => char(' ', 'single space') | char('\t', 'single tab');
 

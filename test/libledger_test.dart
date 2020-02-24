@@ -202,9 +202,9 @@ void main() {
     group('commodity integration', () {
       parseSuccess<Statement>('commodity declaration and statement , .',
           'commodity 1,000.00 €\n2020-02-17\n  Foo  2,123.80', (statements) {
-            expect(statements.first,isA<CommodityDeclaration>());
-            expect((statements[1] as Transaction).lines.first.amount.toString(),
-              equals('2123.80 €'));
+        expect(statements.first, isA<CommodityDeclaration>());
+        expect((statements[1] as Transaction).lines.first.amount.toString(),
+            equals('2123.80 €'));
       });
 
       parseFailure('commodity declaration and wrong statement',

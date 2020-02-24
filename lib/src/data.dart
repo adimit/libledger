@@ -105,8 +105,7 @@ class CommodityDeclaration implements Statement {
   CommodityDeclaration(this.currency, this.format);
 
   @override
-  String toString() =>
-      'commodity 1${format.ksep}000${format.radix} $currency';
+  String toString() => 'commodity 1${format.ksep}000${format.radix} $currency';
 }
 
 class NumberFormat {
