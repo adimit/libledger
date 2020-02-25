@@ -256,8 +256,8 @@ void main() {
 
       group('commodity', () {
         expectGrammar<Success>(def.commodity, 'commodity 1,000.00 EUR');
-        expectGrammar<Success>(def.commodity, 'commodity 1 000.00 EUR');
-        expectGrammar<Success>(def.commodity, 'commodity 1 000.00 EUR');
+        expectGrammar<Success>(def.commodity, 'commodity 1 000,00 EUR');
+        expectGrammar<Success>(def.commodity, 'commodity 1 000,00 EUR');
         expectGrammar<Success>(def.commodity, 'commodity 1.000,00 EUR');
         expectGrammar<Success>(def.commodity, 'commodity EUR 1.000,00');
         expectGrammar<Failure>(def.commodity, 'commodity');
