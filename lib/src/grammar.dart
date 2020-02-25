@@ -59,7 +59,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
           (char('.') | (char(' ') & digit())).not('not followed by period'))
       .map((results) => [
             results,
-            [null, ',']
+            [',', null]
           ]);
 
   Parser radixPeriodOnly() => (digit('digits before radix period')
@@ -69,7 +69,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
           char(',').not('not followed by comma'))
       .map((results) => [
             results,
-            [null, '.']
+            ['.', null]
           ]);
 
   Parser radixComma() =>
@@ -96,7 +96,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
               char('.').not('not followed by period'))
           .map((results) => [
                 results,
-                [separator, ',']
+                [',', separator]
               ]);
 
   Parser commodity() =>
@@ -104,8 +104,8 @@ class LedgerGrammarDefinition extends GrammarDefinition {
           .pick(2)
           .map((amount) {
         final currency = amount[1];
-        final radix = amount[0][1][1][1];
-        final ksep = amount[0][1][1][0];
+        final radix = amount[0][1][1][0];
+        final ksep = amount[0][1][1][1];
         return [currency, radix, ksep];
       });
 
@@ -118,7 +118,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
           char(',').not('not followed by comma'))
       .map((results) => [
             results,
-            [',', '.']
+            ['.', ',']
           ]);
 
   Parser amountCurrency() =>

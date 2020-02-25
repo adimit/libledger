@@ -268,21 +268,21 @@ void main() {
           null,
           [
             ['10', '0', null],
-            [' ', ',']
+            [',', ' ']
           ]
         ]);
         expectGrammar<Success>(def.amountValue, '1.0,0', [
           null,
           [
             ['10', '0', null],
-            ['.', ',']
+            [',', '.']
           ]
         ]);
         expectGrammar<Success>(def.amountValue, '1,0.0', [
           null,
           [
             ['10', '0', null],
-            [',', '.']
+            ['.', ',']
           ]
         ]);
         expectGrammar<Success>(def.amountValue, '1');
