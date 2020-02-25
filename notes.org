@@ -50,7 +50,7 @@ ignore the 1k-markers altogether.
   - [X] 1k =.=, radix: =,=
 - [X] Adapt grammar
 - [X] Adapt semantics
-** TODO Support commodity directive [7/11]
+** TODO Support commodity directive [7/12]
 =commodity Apples 1.000,00=
 
 What happens with multiple declarations? How can we keep parser state?
@@ -67,6 +67,8 @@ succeed call =.set()=.
 - [X] Add integration tests for all four commodity directives
 - [X] Add commodity statement data type
 - [X] Add test sfor parsing commodity statements
+- [ ] Tests for necessarilyseparatedby: =a,a= success. =a,a,= success iff flag is set, =a,a= includeseps true/false, =a= failure, =a,b= failure
+- [ ] Implement necessarily separated by extension
 - [ ] Find a different way to fix transfer of information from account parser to commodity parser
 - [ ] Add tests for serialisation of amount with new number format
 - [ ] parse commodity statements

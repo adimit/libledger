@@ -49,8 +49,8 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 
   Parser amountValue() =>
       char('-', 'negative sign').optional() &
-      ((ref(radixCommaWith1k) | ref(radixPeriodWith1k)) |
-          (ref(radixCommaOnly) | ref(radixPeriodOnly)));
+      ((ref(radixPeriodWith1k) | ref(radixCommaWith1k)) |
+          (ref(radixPeriodOnly) | ref(radixCommaOnly)));
 
   Parser radixCommaOnly() => (digit('digits before radix comma')
               .plus()
@@ -155,4 +155,11 @@ class LedgerGrammarDefinition extends GrammarDefinition {
           ref(account) &
           ref(inlineSpace).star())
       .pick(2);
+}
+
+extension NecessarilySeparatedBy<T> on Parser<T> {
+  Parser<List<R>> necessarilySeparatedBy<R>(Parser separator,
+      {bool includeSeparators = true, bool optionalSeparatorAtEnd = false}) {
+      (this)
+    }
 }
