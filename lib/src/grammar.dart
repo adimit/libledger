@@ -160,6 +160,8 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 extension NecessarilySeparatedBy<T> on Parser<T> {
   Parser<List<R>> necessarilySeparatedBy<R>(Parser separator,
       {bool includeSeparators = true, bool optionalSeparatorAtEnd = false}) {
-      (this)
-    }
+    separatedBy(separator,
+        includeSeparators: includeSeparators,
+        optionalSeparatorAtEnd: optionalSeparatorAtEnd);
+  }
 }
