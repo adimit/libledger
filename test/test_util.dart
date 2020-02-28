@@ -1,7 +1,7 @@
 import 'package:libledger/libledger.dart';
 import 'package:test/test.dart';
 
-void castAndCheck<T>(dynamic x, void Function(T) f) {
+void castAndCheck<T>(dynamic x, [void Function(T) f = noop]) {
   expect(x, isA<T>(), reason: 'Expected ${T} but got ${x.toString()}');
   f(x as T);
 }
