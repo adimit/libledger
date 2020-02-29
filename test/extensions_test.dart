@@ -15,7 +15,7 @@ void main() {
         });
       });
       test('just a fails', () {
-        castAndCheck<Failure>(char('a').necessarilySeparatedBy(char(',')));
+        castAndCheck<Failure>(char('a').necessarilySeparatedBy(char(',')).parse('a'));
       });
       test('a,a with seps', () {
         castAndCheck<Success>(
@@ -25,17 +25,17 @@ void main() {
           expect(result.value, equals(['a', ',', 'a']));
         });
       });
-      test('a,a, without trailing flag', () {
+      test('a, without trailing flag', () {
         castAndCheck<Failure>(char('a')
-            .necessarilySeparatedBy(char(','), optionalSeparatorAtEnd: false));
+            .necessarilySeparatedBy(char(','), optionalSeparatorAtEnd: false).parse('a,'));
       });
-      test('a,a, with trailing flag', () {
+      test('a, with trailing flag', () {
         castAndCheck<Success>(char('a')
-            .necessarilySeparatedBy(char(','), optionalSeparatorAtEnd: false));
+            .necessarilySeparatedBy(char(','), optionalSeparatorAtEnd: true).parse('a,'));
       });
       test('a,b failure', () {
         castAndCheck<Failure>(char('a')
-            .necessarilySeparatedBy(char(',')));
+            .necessarilySeparatedBy(char(',')).parse('a,b'));
       });
     });
   });
