@@ -160,8 +160,18 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 extension NecessarilySeparatedBy<T> on Parser<T> {
   Parser<List<R>> necessarilySeparatedBy<R>(Parser separator,
       {bool includeSeparators = true, bool optionalSeparatorAtEnd = false}) {
-    return separatedBy(separator,
-        includeSeparators: includeSeparators,
+    final parser = separatedBy(separator,
+        includeSeparators: true,
         optionalSeparatorAtEnd: optionalSeparatorAtEnd);
+    parser.callCC((cc, context) {
+      final result = cc(context);
+      if (result is Success) {
+        if (result.value.length == 1) {
+          return Failure(context.buffer, context.position, 'Need to match separator at least once');
+        }
+      }
+      return result;
+    });
+    return null;
   }
 }
