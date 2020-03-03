@@ -163,7 +163,7 @@ extension NecessarilySeparatedBy<T> on Parser<T> {
     final parser = separatedBy(separator,
         includeSeparators: true,
         optionalSeparatorAtEnd: optionalSeparatorAtEnd);
-    parser.callCC((cc, context) {
+    return parser.callCC((cc, context) {
       final result = cc(context);
       if (result is Success) {
         final length = result.value.length;
@@ -179,10 +179,10 @@ extension NecessarilySeparatedBy<T> on Parser<T> {
               list.add(result.value[i]);
             }
           }
+          return Success(context.buffer, context.position, list);
         }
       }
       return result;
     });
-    return null;
   }
 }
