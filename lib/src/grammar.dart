@@ -89,7 +89,7 @@ class LedgerGrammarDefinition extends GrammarDefinition {
       (digit('digits before radix comma with 1k')
                   .plus()
                   .flatten('integer part')
-                  .separatedBy(char(separator, '1k sep space'),
+                  .separatedBy(char(separator, '1k sep dynamic ${separator}'),
                       includeSeparators: false)
                   .map((thousandGroups) => thousandGroups.join()) &
               ref(radixComma) &
