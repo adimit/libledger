@@ -166,13 +166,13 @@ extension NecessarilySeparatedBy<T> on Parser<T> {
       final result = cc(context);
       if (result is Success) {
         final length = result.value.length;
-        if (length == 1 || length == 2 && optionalSeparatorAtEnd) {
+        if (length == 1 || length == 2 && !optionalSeparatorAtEnd) {
           return Failure(context.buffer, context.position,
             'Need to match separator at least once');
         }
         if (!includeSeparators) {
-          final list = [];
           // 🤮
+          final list = [];
           for (var i = 0; i < length; i++) {
             if (i % 2 == 0) {
               list.add(result.value[i]);
