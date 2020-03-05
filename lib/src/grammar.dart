@@ -161,28 +161,30 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 
 extension NecessarilySeparatedBy<T> on Parser<T> {
   Parser<List<R>> necessarilySeparatedBy<R>(Parser separator,
-    {bool includeSeparators = true, bool optionalSeparatorAtEnd = false}) => separatedBy(separator,
-    includeSeparators: true,
-    optionalSeparatorAtEnd: optionalSeparatorAtEnd)
-  .callCC((cc, context) {
-      final result = cc(context);
-      if (result is Success) {
-        final length = result.value.length;
-        if (length == 1 || length == 2 && !optionalSeparatorAtEnd) {
-          return Failure(context.buffer, context.position,
-            'Need to match separator at least once');
-        }
-        if (!includeSeparators) {
-          // 🤮
-          final list = [];
-          for (var i = 0; i < length; i++) {
-            if (i % 2 == 0) {
-              list.add(result.value[i]);
-            }
+          {bool includeSeparators = true,
+          bool optionalSeparatorAtEnd = false}) =>
+      separatedBy(separator,
+              includeSeparators: true,
+              optionalSeparatorAtEnd: optionalSeparatorAtEnd)
+          .callCC((cc, context) {
+        final result = cc(context);
+        if (result is Success) {
+          final length = result.value.length;
+          if (length == 1 || length == 2 && !optionalSeparatorAtEnd) {
+            return Failure(context.buffer, context.position,
+                'Need to match separator at least once');
           }
-          return Success(context.buffer, context.position, list);
+          if (!includeSeparators) {
+            // 🤮
+            final list = [];
+            for (var i = 0; i < length; i++) {
+              if (i % 2 == 0) {
+                list.add(result.value[i]);
+              }
+            }
+            return context.success(list);
+          }
         }
-      }
-      return result;
-  });
+        return result;
+      });
 }
